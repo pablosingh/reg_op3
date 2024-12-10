@@ -1,8 +1,13 @@
 import React from "react";
 import styled from "styled-components";
+import CardHolding from "../components/CardHolding";
 
 export default function Holdings() {
-    return <ContainerStyled>Holdings</ContainerStyled>;
+    return (
+        <ContainerStyled>
+            <CardHolding />
+        </ContainerStyled>
+    );
 }
 
 const ContainerStyled = styled.div`
