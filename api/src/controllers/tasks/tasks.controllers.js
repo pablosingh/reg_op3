@@ -3,9 +3,14 @@ import Holding from "../../models/Holding.js";
 
 export const createTask = async (req, res) => {
     console.log(req.body);
-    const { title, description, done } = req.body;
+    const { title, description, done, HoldingId } = req.body;
     try {
-        const newTask = await Task.create({ title, description, done });
+        const newTask = await Task.create({
+            title,
+            description,
+            done,
+            HoldingId,
+        });
         res.json(newTask);
     } catch (error) {
         res.json({ message: error });
@@ -34,11 +39,11 @@ export const updateDoneTask = async (req, res) => {
 };
 
 export const getTasksByHoldingId = async (req, res) => {
-    const { id } = req.body;
+    const { HoldingId } = req.body;
     try {
         const arrayTasks = await Task.findAll({
             where: {
-                id,
+                HoldingId,
             },
             include: Holding,
         });

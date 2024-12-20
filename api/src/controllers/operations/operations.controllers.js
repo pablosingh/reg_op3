@@ -1,7 +1,7 @@
 import Operation from "../../models/Operation.js";
 // import User from "../../models/User.js";
 import Holding from "../../models/Holding.js";
-import { updateHolding } from "../holdings/holdings.controllers.js";
+// import { updateHolding } from "../holdings/holdings.controllers.js";
 
 export const createOperation = async (req, res) => {
     const {
@@ -15,7 +15,7 @@ export const createOperation = async (req, res) => {
         comment,
         UserId,
     } = req.body;
-    const formattedBuy = buy === "true" ? true : false;
+    // const formattedBuy = buy === "true" ? true : false;
     console.log("req body");
     console.log(req.body);
     // const dateTicker = new Date();
@@ -25,7 +25,8 @@ export const createOperation = async (req, res) => {
     //     year: 'numeric',
     // });
     const toCreate = {
-        date: date,
+        // date: date,
+        date: new Date(),
         amount: Number.parseFloat(amount),
         price: Number.parseFloat(price),
         total: Number.parseFloat(total),
@@ -33,7 +34,6 @@ export const createOperation = async (req, res) => {
     };
     console.log("toCreate");
     console.log(toCreate);
-    // console.log(typeof buy);
     try {
         const foundHolding = await Holding.findOne({
             where: {
@@ -90,42 +90,3 @@ export const getOperations = async (req, res) => {
         res.json({ message: error });
     }
 };
-
-// export const updateOperation = async (req, res) => {
-//     // console.log("update Operation");
-//     // console.log(req.body);
-//     const { id, date, amount, price, total, buy, exchange, comment } = req.body;
-//     try {
-//         const foundOperation = await Operation.findOne({
-//             where: {
-//                 id: id,
-//             },
-//         });
-//         foundOperation.date = date;
-//         foundOperation.amount = Number(amount);
-//         foundOperation.price = Number(price);
-//         foundOperation.total = Number(total);
-//         foundOperation.buy = buy;
-//         foundOperation.exchange = exchange;
-//         foundOperation.comment = comment;
-//         await foundOperation.save();
-//         await updateHolding(foundOperation.HoldingId);
-//         res.json(foundOperation);
-//     } catch (error) {
-//         res.status(500).json({ message: error });
-//     }
-// };
-
-// export const deleteOperation = async (req, res) => {
-//     try {
-//         const { id } = req.params;
-//         await Operation.destroy({
-//             where: {
-//                 id,
-//             },
-//         });
-//         res.json({ message: "Operacion eliminada: " + id });
-//     } catch (error) {
-//         res.status(404).json({ message: error });
-//     }
-// };

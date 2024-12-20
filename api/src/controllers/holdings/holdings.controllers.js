@@ -83,22 +83,3 @@ export const updateHolding = async (id) => {
         return { msg: error };
     }
 };
-
-// export const updateCommentHolding = async (req, res) => {
-//     const { id, comment } = req.body;
-//     try {
-//         const foundHolding = await Holding.findOne({
-//             where: {
-//                 id,
-//             },
-//             // include: [ Operation ]
-//         });
-//         if (foundHolding) {
-//             foundHolding.comment = comment;
-//             await foundHolding.save();
-//             res.json(foundHolding);
-//         } else res.json({ msg: "error - Holding not found" });
-//     } catch (error) {
-//         res.json({ msg: error });
-//     }
-// };

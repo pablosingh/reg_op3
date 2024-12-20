@@ -7,6 +7,11 @@ import Cripto from "./models/Cripto.js";
 import User from "./models/User.js";
 import Task from "./models/Task.js";
 
+import {
+    initialCriptoLoadingCMC,
+    programarEjecucionDiaria,
+} from "./controllers/criptos/initDBcmc.controllers.js";
+
 User.hasMany(Holding, { foreinkey: "UserId" });
 Holding.belongsTo(User, { foreignKey: "UserId" });
 
@@ -18,12 +23,12 @@ Task.belongsTo(Holding, { foreinkey: "HoldingId" });
 
 const port = process.env.PORT || 3001;
 sequelize
-    .sync({ force: true })
+    .sync({ force: false })
     .then(() => {
         app.listen(port, async () => {
             console.log("Server on port ", port);
-            //   initialCriptoLoadingCMC();
-            //   programarEjecucionDiaria();
+            initialCriptoLoadingCMC();
+            programarEjecucionDiaria();
         });
     })
     .catch((e) => console.error(e));

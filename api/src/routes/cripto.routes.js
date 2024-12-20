@@ -2,7 +2,7 @@ import { Router } from "express";
 import {
     addCripto,
     getCriptos,
-} from "../controllers/criptos/cripto.controllers.js";
+} from "../controllers/criptos/criptos.controllers.js";
 import { getActualPriceDB } from "../controllers/criptos/getActualPrice.controllers.js";
 const router = Router();
 
