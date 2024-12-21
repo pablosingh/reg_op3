@@ -18,14 +18,11 @@ const Holding = sequelize.define(
         amount: {
             type: DataTypes.FLOAT,
         },
-        price: {
+        initialPrice: {
             type: DataTypes.FLOAT,
         },
-        total: {
+        initialTotal: {
             type: DataTypes.FLOAT,
-        },
-        comment: {
-            type: DataTypes.STRING,
         },
     },
     {

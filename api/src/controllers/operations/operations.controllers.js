@@ -7,7 +7,7 @@ export const createOperation = async (req, res) => {
     const {
         date,
         ticker,
-        amount,
+        number,
         price,
         total,
         buy,
@@ -27,7 +27,7 @@ export const createOperation = async (req, res) => {
     const toCreate = {
         // date: date,
         date: new Date(),
-        amount: Number.parseFloat(amount),
+        number: Number.parseFloat(number),
         price: Number.parseFloat(price),
         total: Number.parseFloat(total),
         comment,
@@ -43,9 +43,15 @@ export const createOperation = async (req, res) => {
         });
         if (foundHolding) {
             const newOperation = await Operation.create({
-                ...toCreate,
+                // ...toCreate,
+                date: new Date(),
+                ticker: ticker.toUpperCase(),
+                number: Number.parseFloat(number),
+                price: Number.parseFloat(price),
+                total: Number.parseFloat(total),
                 buy,
                 exchange,
+                comment,
                 HoldingId: foundHolding.id,
             });
             if (buy == true) {

@@ -12,7 +12,10 @@ const Operation = sequelize.define(
         date: {
             type: DataTypes.DATE,
         },
-        amount: {
+        ticker: {
+            type: DataTypes.STRING,
+        },
+        number: {
             type: DataTypes.FLOAT,
         },
         price: {
