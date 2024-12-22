@@ -24,16 +24,28 @@ export const createOperation = async (req, res) => {
     //     month: '2-digit',
     //     year: 'numeric',
     // });
-    const toCreate = {
+    const opsToCreate = {
         // date: date,
         date: new Date(),
+        ticker: ticker.toUpperCase(),
         number: Number.parseFloat(number),
         price: Number.parseFloat(price),
         total: Number.parseFloat(total),
+        buy,
+        exchange,
         comment,
     };
+    const holdToCreate = {
+        // date: date,
+        date: new Date(),
+        ticker: ticker.toUpperCase(),
+        amount: Number.parseFloat(number),
+        initialPrice: Number.parseFloat(price),
+        initialTotal: Number.parseFloat(total),
+        UserId,
+    };
     console.log("toCreate");
-    console.log(toCreate);
+    // console.log(toCreate);
     try {
         const foundHolding = await Holding.findOne({
             where: {
@@ -43,39 +55,29 @@ export const createOperation = async (req, res) => {
         });
         if (foundHolding) {
             const newOperation = await Operation.create({
-                // ...toCreate,
-                date: new Date(),
-                ticker: ticker.toUpperCase(),
-                number: Number.parseFloat(number),
-                price: Number.parseFloat(price),
-                total: Number.parseFloat(total),
-                buy,
-                exchange,
-                comment,
+                ...opsToCreate,
                 HoldingId: foundHolding.id,
             });
             if (buy == true) {
-                foundHolding.amount += toCreate.amount;
-                foundHolding.total += toCreate.total;
-                foundHolding.price = foundHolding.total / foundHolding.amount;
+                foundHolding.amount += number;
+                foundHolding.initialTotal += total;
+                foundHolding.initialPrice =
+                    foundHolding.initialTotal / foundHolding.amount;
             } else {
-                foundHolding.amount -= toCreate.amount;
-                foundHolding.total -= toCreate.total;
-                foundHolding.price = foundHolding.total / foundHolding.amount;
+                foundHolding.amount -= number;
+                foundHolding.total -= total;
+                foundHolding.price =
+                    foundHolding.initialTotal / foundHolding.amount;
             }
             await foundHolding.save();
             console.log(newOperation);
             res.json(newOperation);
         } else {
             const newHolding = await Holding.create({
-                ...toCreate,
-                ticker: ticker.toUpperCase(),
-                UserId,
+                ...holdToCreate,
             });
             const newOperation = await Operation.create({
-                ...toCreate,
-                buy,
-                exchange,
+                ...opsToCreate,
                 HoldingId: newHolding.id,
             });
             console.log(newOperation);

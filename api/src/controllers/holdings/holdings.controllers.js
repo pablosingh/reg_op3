@@ -1,6 +1,7 @@
 import Holding from "../../models/Holding.js";
 import User from "../../models/User.js";
 import Operation from "../../models/Operation.js";
+import Task from "../../models/Task.js";
 
 export const getHoldingsByUserId = async (req, res) => {
     const { userId } = req.params;
@@ -9,7 +10,7 @@ export const getHoldingsByUserId = async (req, res) => {
             where: {
                 UserId: userId,
             },
-            include: [Operation, User],
+            include: [Operation, User, Task],
         });
         res.json(foundHoldings);
     } catch (error) {
@@ -20,7 +21,7 @@ export const getHoldingsByUserId = async (req, res) => {
 export const getHoldings = async (req, res) => {
     try {
         const foundHoldings = await Holding.findAll({
-            include: [Operation, User],
+            include: [Operation, User, Task],
         });
         res.json(foundHoldings);
     } catch (error) {
@@ -29,14 +30,14 @@ export const getHoldings = async (req, res) => {
 };
 
 export const createHolding = async (req, res) => {
-    const { date, ticker, amount, price, total, comment, UserId } = req.body;
+    const { date, ticker, amount, initialPrice, initialTotal, UserId } =
+        req.body;
     const toCreate = {
         date: date,
         ticker: ticker?.toUpperCase(),
         amount: Number.parseFloat(amount),
-        price: Number.parseFloat(price),
-        total: Number.parseFloat(total),
-        comment,
+        initialPrice: Number.parseFloat(initialPrice),
+        initialTotal: Number.parseFloat(initialTotal),
         UserId,
     };
     try {
@@ -61,19 +62,20 @@ export const updateHolding = async (id) => {
                 (acumulador, op) => {
                     if (op.buy == true) {
                         acumulador.amount += op.amount;
-                        acumulador.total += op.total;
+                        acumulador.initialTotal += op.initialTotal;
                     } else {
                         acumulador.amount -= op.amount;
-                        acumulador.total -= op.total;
+                        acumulador.initialTotal -= op.initialTotal;
                     }
                     return acumulador;
                 },
-                { amount: 0, total: 0 },
+                { amount: 0, initialTotal: 0 },
             );
-            objToUpdate.price = objToUpdate.total / objToUpdate.amount;
+            objToUpdate.initialPrice =
+                objToUpdate.initialTotal / objToUpdate.amount;
             foundHolding.amount = objToUpdate.amount;
-            foundHolding.total = objToUpdate.total;
-            foundHolding.price = objToUpdate.price;
+            foundHolding.initialTotal = objToUpdate.initialTotal;
+            foundHolding.initialPrice = objToUpdate.initialPrice;
             await foundHolding.save();
             return foundHolding;
         } else {
