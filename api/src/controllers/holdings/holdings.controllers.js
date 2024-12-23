@@ -61,15 +61,19 @@ export const updateHolding = async (id) => {
             const objToUpdate = foundHolding.Operations?.reduce(
                 (acumulador, op) => {
                     if (op.buy == true) {
-                        acumulador.amount += op.amount;
-                        acumulador.initialTotal += op.initialTotal;
+                        acumulador.amount += Number.parseFloat(op.amount);
+                        acumulador.initialTotal += Number.parseFloat(
+                            op.initialTotal,
+                        );
                     } else {
-                        acumulador.amount -= op.amount;
-                        acumulador.initialTotal -= op.initialTotal;
+                        acumulador.amount -= Number.parseFloat(op.amount);
+                        acumulador.initialTotal -= Number.parseFloat(
+                            op.initialTotal,
+                        );
                     }
                     return acumulador;
                 },
-                { amount: 0, initialTotal: 0 },
+                { amount: 0.0, initialTotal: 0.0 },
             );
             objToUpdate.initialPrice =
                 objToUpdate.initialTotal / objToUpdate.amount;

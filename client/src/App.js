@@ -3,10 +3,13 @@ import Create from "./pages/Create";
 import Holdings from "./pages/Holdings";
 import User from "./pages/User";
 import Navigation from "./components/Navigation";
+import { Provider } from "react-redux";
+import store from "./redux/store";
 
 export default function App() {
     return (
-        <div className="App">
+        // <div className="App">
+        <Provider store={store}>
             <BrowserRouter>
                 <Navigation />
                 <Routes>
@@ -21,6 +24,7 @@ export default function App() {
                     <Route path="/user" element={<User />} />
                 </Routes>
             </BrowserRouter>
-        </div>
+        </Provider>
+        // </div>
     );
 }

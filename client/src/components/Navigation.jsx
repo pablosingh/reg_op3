@@ -1,8 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { loadUserId } from "../redux/holdings/actions";
+import { useDispatch } from "react-redux";
 
 export default function Navigation() {
+    const dispatch = useDispatch();
+    useEffect(() => {
+        dispatch(
+            loadUserId({
+                email: "pablo.roberto.singh@gmail.com",
+                name: "Pablo Roberto Singh",
+            }),
+        );
+    }, []);
     return (
         <ContainerStyled>
             <Link to="/holdings" className="link">

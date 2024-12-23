@@ -1,10 +1,13 @@
 import React from "react";
 import styled from "styled-components";
 import CardHolding from "../components/CardHolding";
+import { useSelector } from "react-redux";
 
 export default function Holdings() {
+    const state = useSelector((state) => state);
     return (
         <ContainerStyled>
+            <button onClick={() => console.log(state)}>Estado</button>
             <CardHolding />
         </ContainerStyled>
     );
