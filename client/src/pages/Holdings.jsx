@@ -4,11 +4,15 @@ import CardHolding from "../components/CardHolding";
 import { useSelector } from "react-redux";
 
 export default function Holdings() {
-    const state = useSelector((state) => state);
+    const arrayHoldings = useSelector((state) => state?.holdings.holdings);
     return (
         <ContainerStyled>
-            <button onClick={() => console.log(state)}>Estado</button>
-            <CardHolding />
+            <button onClick={() => console.log(arrayHoldings)}>Estado</button>
+            {/* <CardHolding /> */}
+            {arrayHoldings &&
+                arrayHoldings.map((hold) => (
+                    <CardHolding ticker={hold} key={hold.id} />
+                ))}
         </ContainerStyled>
     );
 }

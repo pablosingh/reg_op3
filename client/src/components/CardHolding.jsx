@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import {
     primaryColor,
@@ -8,35 +8,34 @@ import {
     ItemHoldingColor,
 } from "../styles/colors";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import CardTicker from "./CardTicker";
 
 export default function CardHolding(props) {
-    // const {
-    //     id,
-    //     date,
-    //     ticker,
-    //     amount,
-    //     price,
-    //     total,
-    //     comment,
-    //     actualPrice,
-    //     profits,
-    //     Operations,
-    // } = props.ticker;
-    const id = "";
-    const date = "";
-    const ticker = "Ticker";
-    const amount = 100;
-    const price = 500.0;
-    const total = 50000.0;
-    const comment = "Comentarios";
-    const actualPrice = 7000.0;
-    const profits = 10000.0;
-    const Operations = "Operaciones";
+    const {
+        id,
+        date,
+        ticker,
+        //
+        amount,
+        initialPrice,
+        initialTotal,
+        //
+        actualPrice,
+        profits,
+        Operations,
+    } = props.ticker;
+    const [showOps, setShowOps] = useState(false);
+    const dateTicker = new Date(date);
+    const formattedDate = dateTicker.toLocaleDateString("es-ES", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+    });
     return (
         <ContainerStyled>
             <Sector>
                 <Item>
-                    <SubItem>{"formattedDate"}</SubItem>
+                    <SubItem>{formattedDate}</SubItem>
                 </Item>
                 <Item>
                     <label>{ticker} </label>
@@ -44,13 +43,13 @@ export default function CardHolding(props) {
                 </Item>
                 <Item>
                     <label>Precio Inicial</label>
-                    <SubItem>${price}</SubItem>
+                    <SubItem>${initialPrice}</SubItem>
                     <label>Precio Final</label>
                     <SubItem>${actualPrice}</SubItem>
                 </Item>
                 <Item>
                     <label>Capital Inicial</label>
-                    <SubItem>${amount * price}</SubItem>
+                    <SubItem>${initialTotal}</SubItem>
                     <label>Capital Final</label>
                     <SubItem>${amount * actualPrice}</SubItem>
                 </Item>
@@ -66,52 +65,22 @@ export default function CardHolding(props) {
                         % {(amount * actualPrice * 100).toFixed(2)}
                     </SubItem>
                 </Item>
-                {/* {editDisabled ? (
-                    <Item>
-                        <label>
-                            Comentarios
-                            <Btn
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    // setEditDisabled(!editDisabled);
-                                }}
-                            >
-                                <BorderColorOutlinedIcon
-                                    sx={{ fontSize: 12 }}
-                                />
-                            </Btn>
-                        </label>
-                        <SubItem>{comment}</SubItem>
-                    </Item>
-                ) : (
-                    <Item>
-                        <label>
-                            Comentarios
-                            <Btn onClick={updatingComment}>Salvar</Btn>
-                        </label>
-                        <InputData
-                            type="text"
-                            name="comment"
-                            value={commentState}
-                            disabled={editDisabled}
-                            onClick={(e) => e.stopPropagation()}
-                            onChange={editComment}
-                        />
-                    </Item>
-                )} */}
-                <button className="myButton" onClick={() => {}}>
+                <button
+                    className="myButton"
+                    onClick={() => setShowOps(!showOps)}
+                >
                     <ArrowDownwardIcon />
                 </button>
             </Sector>
 
-            {/* {showOps ? (
+            {showOps ? (
                 <DivOps>
                     {Operations &&
                         Operations.map((o) => (
                             <CardTicker ticker={o} key={o.id} />
                         ))}
                 </DivOps>
-            ) : null} */}
+            ) : null}
         </ContainerStyled>
     );
 }
