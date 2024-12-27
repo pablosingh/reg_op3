@@ -25,6 +25,9 @@ export default function Navigation() {
             <Link to="/user" className="link">
                 Usuario
             </Link>
+            <Link to="/watch" className="link">
+                Seguimiento
+            </Link>
         </ContainerStyled>
     );
 }

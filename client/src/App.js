@@ -5,6 +5,7 @@ import User from "./pages/User";
 import Navigation from "./components/Navigation";
 import { Provider } from "react-redux";
 import store from "./redux/store";
+import WatchList from "./pages/WatchList";
 
 export default function App() {
     return (
@@ -22,6 +23,7 @@ export default function App() {
                     <Route path="/holdings" element={<Holdings />} />
                     <Route path="/create" element={<Create />} />
                     <Route path="/user" element={<User />} />
+                    <Route path="/watch" element={<WatchList />} />
                 </Routes>
             </BrowserRouter>
         </Provider>
