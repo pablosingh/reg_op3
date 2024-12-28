@@ -9,6 +9,7 @@ import {
 } from "../styles/colors";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import CardTicker from "./CardTicker";
+import { useSelector } from "react-redux";
 
 export default function CardHolding(props) {
     const {
@@ -24,6 +25,7 @@ export default function CardHolding(props) {
         profits,
         Operations,
     } = props.ticker;
+    const state = useSelector((state) => state);
     const [showOps, setShowOps] = useState(false);
     const dateTicker = new Date(date);
     const formattedDate = dateTicker.toLocaleDateString("es-ES", {
@@ -55,14 +57,18 @@ export default function CardHolding(props) {
                 </Item>
                 <Item>
                     <label>Ganancias </label>
-                    <SubItem>${profits?.toFixed(2)}</SubItem>
+                    <SubItem className={`${profits > 0 ? "green" : "red"}`}>
+                        ${profits?.toFixed(2)}
+                    </SubItem>
                 </Item>
                 <Item>
                     <label>% Portafolio </label>
-                    <SubItem
-                        className={`${actualPrice * 100 > 0 ? "green" : "red"}`}
-                    >
-                        % {(amount * actualPrice * 100).toFixed(2)}
+                    <SubItem>
+                        %{" "}
+                        {(
+                            (amount * actualPrice * 100) /
+                            state?.holdings?.totalActualPrice
+                        )?.toFixed(2)}
                     </SubItem>
                 </Item>
                 <button

@@ -19,6 +19,10 @@ export default function Total() {
                     <SubItem>
                         $ {state?.holdings.totalInvestedCapital?.toFixed(2)}
                     </SubItem>
+                    Total Final
+                    <SubItem>
+                        $ {state?.holdings.totalActualPrice?.toFixed(2)}
+                    </SubItem>
                 </Item>
                 <Item>
                     Total de Ganancias
