@@ -45,17 +45,17 @@ export default function CardHolding(props) {
                     <label>Precio Inicial</label>
                     <SubItem>${initialPrice}</SubItem>
                     <label>Precio Final</label>
-                    <SubItem>${actualPrice}</SubItem>
+                    <SubItem>${actualPrice?.toFixed(2)}</SubItem>
                 </Item>
                 <Item>
                     <label>Capital Inicial</label>
-                    <SubItem>${initialTotal}</SubItem>
+                    <SubItem>${initialTotal?.toFixed(2)}</SubItem>
                     <label>Capital Final</label>
-                    <SubItem>${amount * actualPrice}</SubItem>
+                    <SubItem>${(amount * actualPrice)?.toFixed(2)}</SubItem>
                 </Item>
                 <Item>
                     <label>Ganancias </label>
-                    <SubItem>${profits}</SubItem>
+                    <SubItem>${profits?.toFixed(2)}</SubItem>
                 </Item>
                 <Item>
                     <label>% Portafolio </label>

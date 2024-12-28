@@ -12,7 +12,7 @@ const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:3001/";
 
 export function calculateTotalInvestedCapital(arrayHoldings) {
     return arrayHoldings.reduce(
-        (acumulador, elemento) => acumulador + elemento.total,
+        (acumulador, elemento) => acumulador + elemento.initialTotal,
         0,
     );
 }
@@ -58,6 +58,7 @@ export function loadHoldingsFromDB(userId) {
                         .then(() => {
                             Promise.all(subPromesas)
                                 .then((subValues) => {
+                                    // console.log(subValues);
                                     subValues.forEach((sub, i) => {
                                         if (sub) {
                                             holdingsToSend[i].actualPrice =
@@ -65,12 +66,12 @@ export function loadHoldingsFromDB(userId) {
                                             holdingsToSend[i].profits =
                                                 holdingsToSend[i].actualPrice *
                                                     holdingsToSend[i].amount -
-                                                holdingsToSend[i].price *
+                                                holdingsToSend[i].initialPrice *
                                                     holdingsToSend[i].amount;
                                         }
                                     });
                                 })
-                                // .then( () => console.log(holdingsToSend) )
+                                // .then(() => console.log(holdingsToSend))
                                 .then(() =>
                                     dispatch({
                                         type: LOAD_HOLD_FROM_DB,
@@ -117,9 +118,6 @@ export function loadHoldingsFromDB(userId) {
 
 export function loadUserId({ email, name }) {
     return async function (dispatch) {
-        // console.log(apiUrl);
-        // console.log(email);
-        // console.log(name);
         const options = {
             method: "POST",
             body: JSON.stringify({
@@ -133,11 +131,10 @@ export function loadUserId({ email, name }) {
         };
         try {
             await fetch(`${apiUrl}userbyemail`, options)
-                // await fetch(`http://localhost:3001/userbyemail`, options)
                 .then((js) => js.json())
                 .then((usr) => {
                     dispatch({ type: LOAD_USER_ID, payload: usr.id });
-                    console.log(usr);
+                    // console.log(usr);
                     return usr.id;
                 })
                 .then((id) => dispatch(loadHoldingsFromDB(id)))
