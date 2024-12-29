@@ -1,16 +1,16 @@
 import {
     LOAD_HOLD_FROM_DB,
     LOAD_USER_ID,
-    LOAD_TOTAL_INVESTED_CAPITAL,
-    LOAD_TOTAL_ACTUAL_PRICE,
+    LOAD_INITIAL_TOTAL_PORTFOLIO,
+    LOAD_ACTUAL_TOTAL_PORTFOLIO,
     LOAD_TOTAL_PROFITS,
 } from "./actions";
 
 const initialState = {
     userId: 0,
     holdings: [],
-    totalInvestedCapital: 0.0,
-    totalActualPrice: 0.0,
+    initialTotalPortfolio: 0.0,
+    actualTotalPortfolio: 0.0,
     totalProfits: 0.0,
 };
 
@@ -26,15 +26,15 @@ export const holdings = (state = initialState, action) => {
                 ...state,
                 userId: action.payload,
             };
-        case LOAD_TOTAL_INVESTED_CAPITAL:
+        case LOAD_INITIAL_TOTAL_PORTFOLIO:
             return {
                 ...state,
-                totalInvestedCapital: action.payload,
+                initialTotalPortfolio: action.payload,
             };
-        case LOAD_TOTAL_ACTUAL_PRICE:
+        case LOAD_ACTUAL_TOTAL_PORTFOLIO:
             return {
                 ...state,
-                totalActualPrice: action.payload,
+                actualTotalPortfolio: action.payload,
             };
         case LOAD_TOTAL_PROFITS:
             return {

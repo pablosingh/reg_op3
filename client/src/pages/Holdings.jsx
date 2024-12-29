@@ -9,10 +9,10 @@ export default function Holdings() {
     const state = useSelector((state) => state);
     return (
         <ContainerStyled>
-            <button onClick={() => console.log(arrayHoldings)}>
+            {/* <button onClick={() => console.log(arrayHoldings)}>
                 Tenencias
             </button>
-            <button onClick={() => console.log(state)}>Estado</button>
+            <button onClick={() => console.log(state)}>Estado</button> */}
             {/* <CardHolding /> */}
             {arrayHoldings &&
                 arrayHoldings.map((hold) => (

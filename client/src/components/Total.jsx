@@ -11,23 +11,32 @@ import { useSelector } from "react-redux";
 
 export default function Total() {
     const state = useSelector((state) => state);
+    const formatter = new Intl.NumberFormat("es-ES", {
+        style: "decimal",
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    });
     return (
         <Container>
             <Sector>
                 <Item>
                     Total Inicial
                     <SubItem>
-                        $ {state?.holdings.totalInvestedCapital?.toFixed(2)}
+                        ${" "}
+                        {formatter.format(
+                            state?.holdings.initialTotalPortfolio,
+                        )}
                     </SubItem>
                     Total Final
                     <SubItem>
-                        $ {state?.holdings.totalActualPrice?.toFixed(2)}
+                        ${" "}
+                        {formatter.format(state?.holdings.actualTotalPortfolio)}
                     </SubItem>
                 </Item>
                 <Item>
                     Total de Ganancias
                     <SubItem>
-                        $ {state?.holdings.totalProfits?.toFixed(2)}
+                        $ {formatter.format(state?.holdings.totalProfits)}
                     </SubItem>
                 </Item>
             </Sector>

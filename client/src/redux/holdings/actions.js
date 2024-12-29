@@ -1,7 +1,7 @@
 export const LOAD_HOLD_FROM_DB = "LOAD_HOLD_FROM_DB";
 export const LOAD_USER_ID = "LOAD_USER_ID";
-export const LOAD_TOTAL_INVESTED_CAPITAL = "LOAD_TOTAL_INVESTED_CAPITAL";
-export const LOAD_TOTAL_ACTUAL_PRICE = "LOAD_TOTAL_ACTUAL_PRICE";
+export const LOAD_INITIAL_TOTAL_PORTFOLIO = "LOAD_INITIAL_TOTAL_PORTFOLIO";
+export const LOAD_ACTUAL_TOTAL_PORTFOLIO = "LOAD_ACTUAL_TOTAL_PORTFOLIO";
 export const LOAD_TOTAL_PROFITS = "LOAD_TOTAL_PROFITS";
 
 // function actualPrice
@@ -10,14 +10,14 @@ export const LOAD_TOTAL_PROFITS = "LOAD_TOTAL_PROFITS";
 
 const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:3001/";
 
-export function calculateTotalInvestedCapital(arrayHoldings) {
+export function calculateinitialTotalPortfolio(arrayHoldings) {
     return arrayHoldings.reduce(
         (acumulador, elemento) => acumulador + elemento.initialTotal,
         0,
     );
 }
 
-export function calculateTotalActualPrice(arrayHoldings) {
+export function calculateActualTotalPortfolio(arrayHoldings) {
     return arrayHoldings.reduce(
         (acumulador, elemento) =>
             acumulador + elemento.actualPrice * elemento.amount,
@@ -80,18 +80,18 @@ export function loadHoldingsFromDB(userId) {
                                 )
                                 .then(() =>
                                     dispatch({
-                                        type: LOAD_TOTAL_INVESTED_CAPITAL,
+                                        type: LOAD_INITIAL_TOTAL_PORTFOLIO,
                                         payload:
-                                            calculateTotalInvestedCapital(
+                                            calculateinitialTotalPortfolio(
                                                 holdingsToSend,
                                             ),
                                     }),
                                 )
                                 .then(() =>
                                     dispatch({
-                                        type: LOAD_TOTAL_ACTUAL_PRICE,
+                                        type: LOAD_ACTUAL_TOTAL_PORTFOLIO,
                                         payload:
-                                            calculateTotalActualPrice(
+                                            calculateActualTotalPortfolio(
                                                 holdingsToSend,
                                             ),
                                     }),
@@ -111,7 +111,7 @@ export function loadHoldingsFromDB(userId) {
         } catch (error) {
             console.error(error);
         } finally {
-            dispatch({ type: LOAD_TOTAL_INVESTED_CAPITAL, payload: null });
+            dispatch({ type: LOAD_INITIAL_TOTAL_PORTFOLIO, payload: null });
         }
     };
 }

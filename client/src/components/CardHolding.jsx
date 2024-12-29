@@ -33,6 +33,11 @@ export default function CardHolding(props) {
         month: "2-digit",
         year: "numeric",
     });
+    const formatter = new Intl.NumberFormat("es-ES", {
+        style: "decimal",
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    });
     return (
         <ContainerStyled>
             <Sector>
@@ -41,34 +46,34 @@ export default function CardHolding(props) {
                 </Item>
                 <Item>
                     <label>{ticker} </label>
-                    <SubItem>{amount}</SubItem>
+                    <SubItem>{formatter.format(amount)}</SubItem>
                 </Item>
                 <Item>
                     <label>Precio Inicial</label>
-                    <SubItem>${initialPrice}</SubItem>
+                    <SubItem>${formatter.format(initialPrice)}</SubItem>
                     <label>Precio Final</label>
-                    <SubItem>${actualPrice?.toFixed(2)}</SubItem>
+                    <SubItem>${formatter.format(actualPrice)}</SubItem>
                 </Item>
                 <Item>
                     <label>Capital Inicial</label>
-                    <SubItem>${initialTotal?.toFixed(2)}</SubItem>
+                    <SubItem>${formatter.format(initialTotal)}</SubItem>
                     <label>Capital Final</label>
-                    <SubItem>${(amount * actualPrice)?.toFixed(2)}</SubItem>
+                    <SubItem>${formatter.format(amount * actualPrice)}</SubItem>
                 </Item>
                 <Item>
                     <label>Ganancias </label>
                     <SubItem className={`${profits > 0 ? "green" : "red"}`}>
-                        ${profits?.toFixed(2)}
+                        ${formatter.format(profits)}
                     </SubItem>
                 </Item>
                 <Item>
                     <label>% Portafolio </label>
                     <SubItem>
                         %{" "}
-                        {(
+                        {formatter.format(
                             (amount * actualPrice * 100) /
-                            state?.holdings?.totalActualPrice
-                        )?.toFixed(2)}
+                                state?.holdings?.actualTotalPortfolio,
+                        )}
                     </SubItem>
                 </Item>
                 <button
