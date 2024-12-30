@@ -3,6 +3,11 @@ export const LOAD_USER_ID = "LOAD_USER_ID";
 export const LOAD_INITIAL_TOTAL_PORTFOLIO = "LOAD_INITIAL_TOTAL_PORTFOLIO";
 export const LOAD_ACTUAL_TOTAL_PORTFOLIO = "LOAD_ACTUAL_TOTAL_PORTFOLIO";
 export const LOAD_TOTAL_PROFITS = "LOAD_TOTAL_PROFITS";
+export const LOAD_TOTAL_PROFITS_PERCENT = "LOAD_TOTAL_PROFITS_PERCENT";
+export const ORDER_BY_PROFITS_PERCENT_ASC = "ORDER_BY_PROFITS_PERCENT_ASC";
+export const ORDER_BY_PROFITS_PERCENT_DES = "ORDER_BY_PROFITS_PERCENT_DES";
+export const ORDER_BY_PORTFOLIO_PERCENT_ASC = "ORDER_BY_PORTFOLIO_PERCENT_ASC";
+export const ORDER_BY_PORTFOLIO_PERCENT_DES = "ORDER_BY_PORTFOLIO_PERCENT_DES";
 
 // function actualPrice
 // apiURL = `https://www.binance.us/api/v3/ticker/price?symbol=btcusdt`;
@@ -10,7 +15,7 @@ export const LOAD_TOTAL_PROFITS = "LOAD_TOTAL_PROFITS";
 
 const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:3001/";
 
-export function calculateinitialTotalPortfolio(arrayHoldings) {
+export function calculateInitialTotalPortfolio(arrayHoldings) {
     return arrayHoldings.reduce(
         (acumulador, elemento) => acumulador + elemento.initialTotal,
         0,
@@ -32,11 +37,30 @@ export function calculateTotalProfits(arrayHoldings) {
     );
 }
 
+export function calculateTotalProfitsPercent(arrayHoldings) {
+    return arrayHoldings.reduce(
+        (acumulador, elemento) => acumulador + elemento.profitsPercent,
+        0,
+    );
+}
+
+export function addPortfolioPercent(
+    arrayHoldings,
+    temporalActualTotalPortfolio,
+) {
+    return arrayHoldings.map((e) => {
+        e.portfolioPercent =
+            (e.amount * e.actualPrice * 100) / temporalActualTotalPortfolio;
+        return e;
+    });
+}
+
 export function loadHoldingsFromDB(userId) {
     return async function (dispatch) {
         var holdingsToSend = [];
         var promesas = [];
         var subPromesas = [];
+        var temporalActualTotalPortfolio = 0.0;
         try {
             await fetch(`${apiUrl}holdings/${userId}`)
                 .then((js) => js.json())
@@ -68,34 +92,41 @@ export function loadHoldingsFromDB(userId) {
                                                     holdingsToSend[i].amount -
                                                 holdingsToSend[i].initialPrice *
                                                     holdingsToSend[i].amount;
+                                            holdingsToSend[i].profitsPercent =
+                                                (holdingsToSend[i].profits *
+                                                    100) /
+                                                holdingsToSend[i].initialTotal;
                                         }
                                     });
                                 })
                                 // .then(() => console.log(holdingsToSend))
                                 .then(() =>
                                     dispatch({
-                                        type: LOAD_HOLD_FROM_DB,
-                                        payload: holdingsToSend,
-                                    }),
-                                )
-                                .then(() =>
-                                    dispatch({
                                         type: LOAD_INITIAL_TOTAL_PORTFOLIO,
                                         payload:
-                                            calculateinitialTotalPortfolio(
+                                            calculateInitialTotalPortfolio(
                                                 holdingsToSend,
                                             ),
                                     }),
                                 )
-                                .then(() =>
+                                .then(() => {
+                                    temporalActualTotalPortfolio =
+                                        calculateActualTotalPortfolio(
+                                            holdingsToSend,
+                                        );
                                     dispatch({
                                         type: LOAD_ACTUAL_TOTAL_PORTFOLIO,
-                                        payload:
-                                            calculateActualTotalPortfolio(
-                                                holdingsToSend,
-                                            ),
-                                    }),
-                                )
+                                        payload: temporalActualTotalPortfolio,
+                                    });
+                                })
+                                .then(() => {
+                                    holdingsToSend = [
+                                        ...addPortfolioPercent(
+                                            holdingsToSend,
+                                            temporalActualTotalPortfolio,
+                                        ),
+                                    ];
+                                })
                                 .then(() =>
                                     dispatch({
                                         type: LOAD_TOTAL_PROFITS,
@@ -103,6 +134,21 @@ export function loadHoldingsFromDB(userId) {
                                             calculateTotalProfits(
                                                 holdingsToSend,
                                             ),
+                                    }),
+                                )
+                                .then(() =>
+                                    dispatch({
+                                        type: LOAD_TOTAL_PROFITS_PERCENT,
+                                        payload:
+                                            calculateTotalProfitsPercent(
+                                                holdingsToSend,
+                                            ),
+                                    }),
+                                )
+                                .then(() =>
+                                    dispatch({
+                                        type: LOAD_HOLD_FROM_DB,
+                                        payload: holdingsToSend,
                                     }),
                                 );
                         });

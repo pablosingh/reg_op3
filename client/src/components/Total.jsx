@@ -38,6 +38,13 @@ export default function Total() {
                     <SubItem>
                         $ {formatter.format(state?.holdings.totalProfits)}
                     </SubItem>
+                    Porcenaje
+                    <SubItem
+                        className={`${state?.holdings.totalProfitsPercent > 0 ? "green" : "red"}`}
+                    >
+                        %{" "}
+                        {formatter.format(state?.holdings.totalProfitsPercent)}
+                    </SubItem>
                 </Item>
             </Sector>
         </Container>
@@ -95,6 +102,14 @@ const Item = styled.div`
     // justify-content: flex-start;
     justify-content: center;
     // align-items: center;
+    .red {
+        font-weight: bold;
+        color: red;
+    }
+    .green {
+        font-weight: bold;
+        color: green;
+    }
 `;
 const SubItem = styled.div`
     color: black;

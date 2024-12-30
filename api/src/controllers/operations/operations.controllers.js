@@ -23,7 +23,12 @@ export const createOperation = async (req, res) => {
     //     year: 'numeric',
     // });
     let buyBoolean;
-    buy == "true" ? (buyBoolean = true) : (buyBoolean = false);
+    // buy == "true" ? (buyBoolean = true) : (buyBoolean = false);
+    if (buy == "true" || buy == true) {
+        buyBoolean = true;
+    } else {
+        buyBoolean = false;
+    }
     const opsToCreate = {
         // date: date,
         date: new Date(),
@@ -57,17 +62,16 @@ export const createOperation = async (req, res) => {
                 HoldingId: foundHolding.id,
             });
             if (buyBoolean == true) {
-                console.log("buy true");
+                // console.log("buy true");
                 foundHolding.amount += Number.parseFloat(number);
                 foundHolding.initialTotal += Number.parseFloat(total);
                 foundHolding.initialPrice =
                     foundHolding.initialTotal / foundHolding.amount;
             } else {
-                console.log("buy false");
+                // console.log("buy false");
                 foundHolding.amount -= Number.parseFloat(number);
-                foundHolding.total -= Number.parseFloat(total);
-                foundHolding.price =
-                    foundHolding.initialTotal / foundHolding.amount;
+                foundHolding.initialTotal =
+                    foundHolding.amount * foundHolding.initialPrice;
             }
             await foundHolding.save();
             console.log(newOperation?.dataValues);
@@ -88,13 +92,13 @@ export const createOperation = async (req, res) => {
     }
 };
 
-export const getOperations = async (req, res) => {
-    try {
-        const arrayOp = await Operation.findAll({
-            include: Holding,
-        });
-        res.json(arrayOp);
-    } catch (error) {
-        res.json({ message: error });
-    }
-};
+// export const getOperations = async (req, res) => {
+//     try {
+//         const arrayOp = await Operation.findAll({
+//             include: Holding,
+//         });
+//         res.json(arrayOp);
+//     } catch (error) {
+//         res.json({ message: error });
+//     }
+// };

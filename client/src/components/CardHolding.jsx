@@ -23,6 +23,8 @@ export default function CardHolding(props) {
         //
         actualPrice,
         profits,
+        profitsPercent,
+        portfolioPercent,
         Operations,
     } = props.ticker;
     const state = useSelector((state) => state);
@@ -61,20 +63,20 @@ export default function CardHolding(props) {
                     <SubItem>${formatter.format(amount * actualPrice)}</SubItem>
                 </Item>
                 <Item>
-                    <label>Ganancias </label>
+                    <label>Ganancias</label>
                     <SubItem className={`${profits > 0 ? "green" : "red"}`}>
                         ${formatter.format(profits)}
+                    </SubItem>
+                    <label>Porcentaje</label>
+                    <SubItem
+                        className={`${profitsPercent > 0 ? "green" : "red"}`}
+                    >
+                        % {formatter.format(profitsPercent)}
                     </SubItem>
                 </Item>
                 <Item>
                     <label>% Portafolio </label>
-                    <SubItem>
-                        %{" "}
-                        {formatter.format(
-                            (amount * actualPrice * 100) /
-                                state?.holdings?.actualTotalPortfolio,
-                        )}
-                    </SubItem>
+                    <SubItem>% {formatter.format(portfolioPercent)}</SubItem>
                 </Item>
                 <button
                     className="myButton"

@@ -1,7 +1,4 @@
-import { useState } from "react";
 import styled from "styled-components";
-import { useSelector, useDispatch } from "react-redux";
-import { loadHoldingsFromDB } from "../redux/holdings/actions";
 import BuySellComponent from "./BuySellComponent";
 import {
     secondaryColor,
@@ -12,66 +9,17 @@ import {
 export default function CardTicker(props) {
     const { id, date, number, price, total, buy, exchange, comment } =
         props.ticker;
-    const state = useSelector((state) => state);
-    const dispatch = useDispatch();
     const dateTicker = new Date(date);
     const formattedDate = dateTicker.toLocaleDateString("es-ES", {
         year: "numeric",
         month: "2-digit",
         day: "2-digit",
     });
-    const initialData = {
-        id,
-        date,
-        // ticker,
-        number,
-        price,
-        total,
-        buy: buy,
-        exchange,
-        comment,
-    };
-    const [editDisabled, setEditDisabled] = useState(true);
-    const [data, setData] = useState(initialData);
-    const [buyState, setBuyState] = useState(buy);
-    const handlerBuy = (buyValue) => {
-        setBuyState(buyValue);
-    };
-    const changing = (e) => {
-        setData({
-            ...data,
-            [e.target.name]: e.target.value,
-        });
-    };
-    const updating = async (e) => {
-        setEditDisabled(!editDisabled);
-        const toUpdate = {
-            ...data,
-            number: Number(data.number),
-            price: Number(data.price),
-            total: Number(data.number * data.price),
-            buy: buyState,
-        };
-        setData(toUpdate);
-        // console.log(toUpdate);
-        const apiUrl = process.env.REACT_APP_API_URL;
-        // console.log(apiUrl);
-        try {
-            await fetch(`${apiUrl}operations`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(toUpdate),
-            })
-                .then((js) => js.json())
-                // .then(res => console.log(res))
-                .then(() => dispatch(loadHoldingsFromDB(state.holdings.userId)))
-                .catch((e) => console.error(e));
-        } catch (err) {
-            console.error(err);
-        }
-    };
+    const formatter = new Intl.NumberFormat("es-ES", {
+        style: "decimal",
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    });
     return (
         <Container>
             <Sector>
@@ -79,83 +27,32 @@ export default function CardTicker(props) {
             </Sector>
             <Sector>
                 <label>Cantidad </label>
-                {editDisabled ? (
-                    <label>{data.number}</label>
-                ) : (
-                    <InputData
-                        type="number"
-                        name="number"
-                        value={data.number}
-                        disabled={editDisabled}
-                        onChange={changing}
-                    />
-                )}
+                <label>{formatter.format(number)}</label>
             </Sector>
             <Sector>
                 <label>Precio </label>
-                {editDisabled ? (
-                    <label>{data.price}</label>
-                ) : (
-                    <InputData
-                        type="number"
-                        name="price"
-                        value={data.price}
-                        disabled={editDisabled}
-                        onChange={changing}
-                    />
-                )}
+                <label>{formatter.format(price)}</label>
             </Sector>
             <Sector>
                 <label>Total </label>
-                {editDisabled ? (
-                    <label>{data.total}</label>
-                ) : (
-                    <InputData
-                        type="number"
-                        name="total"
-                        value={data.total}
-                        disabled={true}
-                        onChange={changing}
-                    />
-                )}
+                <label>{formatter.format(total)}</label>
             </Sector>
             <Sector>
                 <label>Estado</label>
                 <BuySellComponent
-                    handlerBuy={handlerBuy}
+                    handlerBuy={() => {}}
                     buyInitial={buy}
-                    buyDisabled={editDisabled}
+                    buyDisabled={true}
                 />
             </Sector>
             <Sector>
                 <label>Exchange</label>
-                {editDisabled ? (
-                    <label>{data.exchange}</label>
-                ) : (
-                    <InputData
-                        type="text"
-                        name="exchange"
-                        value={data.exchange}
-                        disabled={editDisabled}
-                        onChange={changing}
-                    />
-                )}
+                <label>{exchange}</label>
             </Sector>
             <Sector>
                 <label>Comentarios</label>
-                {editDisabled ? (
-                    <label>{data.comment}</label>
-                ) : (
-                    <InputData
-                        type="text"
-                        name="comment"
-                        value={data.comment}
-                        disabled={editDisabled}
-                        onChange={changing}
-                    />
-                )}
+                <label>{comment}</label>
             </Sector>
-            {/* <Sector><Btn onClick={()=>console.log(data)}>Item</Btn></Sector> */}
         </Container>
     );
 }

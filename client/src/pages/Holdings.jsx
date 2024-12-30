@@ -3,19 +3,18 @@ import styled from "styled-components";
 import CardHolding from "../components/CardHolding";
 import { useSelector } from "react-redux";
 import Total from "../components/Total";
+import CardFiltersButtons from "../components/CardFiltersButtons.jsx";
 
 export default function Holdings() {
     const arrayHoldings = useSelector((state) => state?.holdings.holdings);
     const state = useSelector((state) => state);
     return (
         <ContainerStyled>
-            {/* <button onClick={() => console.log(arrayHoldings)}>
-                Tenencias
-            </button>
+            {/* <button onClick={() => console.log(arrayHoldings)}>Holds</button>
             <button onClick={() => console.log(state)}>Estado</button> */}
-            {/* <CardHolding /> */}
+            <CardFiltersButtons />
             {arrayHoldings &&
-                arrayHoldings.map((hold) => (
+                arrayHoldings?.map((hold) => (
                     <CardHolding ticker={hold} key={hold.id} />
                 ))}
             <Total />
