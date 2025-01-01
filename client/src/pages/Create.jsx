@@ -10,6 +10,7 @@ import {
     tertiaryHoverColor,
 } from "../styles/colors.js";
 import Modal from "../components/Modal";
+import CreateDatePicker from "../components/CreateDatePicker.jsx";
 
 export default function Create() {
     const initialData = {
@@ -32,6 +33,7 @@ export default function Create() {
     const [buy, setBuy] = useState(true);
     const [myDate, setMyDate] = useState(initialDate);
     const [showModal, setShowModal] = useState(false);
+    const [stringDate, setStringDate] = useState("");
     const openModal = () => setShowModal(true);
     const closeModal = () => setShowModal(false);
     const dispatch = useDispatch();
@@ -50,7 +52,7 @@ export default function Create() {
         setMyDate(objDate);
     };
     const addOpsToDB = async (toAdd) => {
-        // console.log(toAdd);
+        console.log(toAdd);
         const apiUrl =
             process.env.REACT_APP_API_URL || "http://localhost:3001/";
         try {
@@ -71,9 +73,11 @@ export default function Create() {
     };
     const sending = (e) => {
         const dateTicker = new Date(myDate.year, myDate.month, myDate.day);
+        let arrayDate = stringDate.split("-");
         const toSend = {
             ...data,
-            date: dateTicker,
+            // date: dateTicker,
+            date: new Date(new Date(arrayDate[0], arrayDate[1], arrayDate[2])),
             buy,
             number: Number.parseFloat(data.number),
             price: Number.parseFloat(data.price),
@@ -90,7 +94,8 @@ export default function Create() {
     return (
         <Container>
             <SubContainer>
-                <CreateDate handlerDate={handlerDate} />
+                {/* <CreateDate handlerDate={handlerDate} /> */}
+                <CreateDatePicker handlerDate={setStringDate} />
                 <Sector>
                     <label>Ticker</label>
                     <InputData

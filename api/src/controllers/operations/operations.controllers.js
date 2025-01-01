@@ -1,7 +1,6 @@
 import Operation from "../../models/Operation.js";
 // import User from "../../models/User.js";
 import Holding from "../../models/Holding.js";
-// import { updateHolding } from "../holdings/holdings.controllers.js";
 
 export const createOperation = async (req, res) => {
     const {
@@ -15,7 +14,7 @@ export const createOperation = async (req, res) => {
         comment,
         UserId,
     } = req.body;
-    // const formattedBuy = buy === "true" ? true : false;
+    console.log(req.body);
     // const dateTicker = new Date();
     // const formattedDate = dateTicker.toLocaleDateString('es-ES', {
     //     day: '2-digit',
@@ -23,15 +22,14 @@ export const createOperation = async (req, res) => {
     //     year: 'numeric',
     // });
     let buyBoolean;
-    // buy == "true" ? (buyBoolean = true) : (buyBoolean = false);
     if (buy == "true" || buy == true) {
         buyBoolean = true;
     } else {
         buyBoolean = false;
     }
     const opsToCreate = {
-        // date: date,
-        date: new Date(),
+        date: date,
+        // date: new Date(),
         ticker: ticker.toUpperCase(),
         number: Number.parseFloat(number),
         price: Number.parseFloat(price),
@@ -41,8 +39,8 @@ export const createOperation = async (req, res) => {
         comment,
     };
     const holdToCreate = {
-        // date: date,
-        date: new Date(),
+        date: date,
+        // date: new Date(),
         ticker: ticker.toUpperCase(),
         amount: Number.parseFloat(number),
         initialPrice: Number.parseFloat(price),
@@ -91,14 +89,3 @@ export const createOperation = async (req, res) => {
         res.json({ message: error });
     }
 };
-
-// export const getOperations = async (req, res) => {
-//     try {
-//         const arrayOp = await Operation.findAll({
-//             include: Holding,
-//         });
-//         res.json(arrayOp);
-//     } catch (error) {
-//         res.json({ message: error });
-//     }
-// };

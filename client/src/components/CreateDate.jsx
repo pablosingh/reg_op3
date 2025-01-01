@@ -28,6 +28,8 @@ export default function CreateDate({ handlerDate }) {
                     name="day"
                     value={newDate.day}
                     onChange={changing}
+                    min={1}
+                    max={31}
                 ></InputDate>
             </Sector>
             <Sector>
@@ -36,6 +38,8 @@ export default function CreateDate({ handlerDate }) {
                     name="month"
                     value={newDate.month}
                     onChange={changing}
+                    min={0}
+                    max={11}
                 ></InputDate>
             </Sector>
             <Sector>

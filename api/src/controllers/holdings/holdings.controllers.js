@@ -18,7 +18,7 @@ export const getHoldingsByUserId = async (req, res) => {
     }
 };
 
-export const getHoldings = async (req, res) => {
+export const getAllHoldings = async (req, res) => {
     try {
         const foundHoldings = await Holding.findAll({
             include: [Operation, User, Task],
@@ -28,25 +28,6 @@ export const getHoldings = async (req, res) => {
         res.json({ msg: error });
     }
 };
-
-// export const createHolding = async (req, res) => {
-//     const { date, ticker, amount, initialPrice, initialTotal, UserId } =
-//         req.body;
-//     const toCreate = {
-//         date: date,
-//         ticker: ticker?.toUpperCase(),
-//         amount: Number.parseFloat(amount),
-//         initialPrice: Number.parseFloat(initialPrice),
-//         initialTotal: Number.parseFloat(initialTotal),
-//         UserId,
-//     };
-//     try {
-//         const newHolding = await Holding.create(toCreate);
-//         res.json(newHolding);
-//     } catch (error) {
-//         res.json({ msg: error });
-//     }
-// };
 
 // export const updateHolding = async (id) => {
 //     try {

@@ -21,7 +21,7 @@ export default function CardFiltersButtons() {
     return (
         <ContainerStyled>
             <Item>
-                Ordenar Por :
+                {/* Ordenar Por : */}
                 <SubItem>
                     <Btn
                         onClick={() =>
@@ -31,8 +31,11 @@ export default function CardFiltersButtons() {
                             })
                         }
                     >
-                        % de Ganancias{" "}
-                        <ArrowUpwardIcon style={{ fontSize: 15 }} />
+                        <BtnInside>
+                            <label>% de </label>
+                            <label>Ganancias</label>
+                            <ArrowUpwardIcon className="symbolBtn" />
+                        </BtnInside>
                     </Btn>
                     <Btn
                         onClick={() =>
@@ -42,7 +45,11 @@ export default function CardFiltersButtons() {
                             })
                         }
                     >
-                        % de Ganancias <ArrowDownwardIcon />
+                        <BtnInside>
+                            <label>% de</label>
+                            <label>Ganancias</label>
+                            <ArrowDownwardIcon className="symbolBtn" />
+                        </BtnInside>
                     </Btn>
                     <Btn
                         onClick={() =>
@@ -52,7 +59,11 @@ export default function CardFiltersButtons() {
                             })
                         }
                     >
-                        % del Portafolio <ArrowUpwardIcon />
+                        <BtnInside>
+                            <label>% del</label>
+                            <label>Portafolio</label>
+                            <ArrowUpwardIcon className="symbolBtn" />
+                        </BtnInside>
                     </Btn>
                     <Btn
                         onClick={() =>
@@ -62,7 +73,11 @@ export default function CardFiltersButtons() {
                             })
                         }
                     >
-                        % del Portafolio <ArrowDownwardIcon />
+                        <BtnInside>
+                            <label>% del</label>
+                            <label>Portafolio</label>
+                            <ArrowDownwardIcon className="symbolBtn" />
+                        </BtnInside>
                     </Btn>
                 </SubItem>
             </Item>
@@ -129,14 +144,16 @@ const Btn = styled.button`
 `;
 
 const BtnInside = styled.div`
-    color: black;
+    color: white;
     display: flex;
     flex-direction: column;
+    align-items: center;
     // background-color: ${secondaryColor};
     // border: 2px solid #333;
     margin: 0.1em;
     padding: 0.3em;
     border-radius: 0.5em;
     .symbolBtn {
+        font-size: 15px;
     }
 `;
