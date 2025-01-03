@@ -22,7 +22,7 @@ export default function CreateDatePicker({ handlerDate }) {
                 value={selectedDate}
                 onChange={handleChange}
             />
-            <p>Fecha seleccionada : {selectedDate}</p>
+            {/* <p>Fecha seleccionada : {selectedDate}</p> */}
         </div>
     );
 }

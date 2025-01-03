@@ -9,6 +9,8 @@ import {
     ORDER_BY_PROFITS_PERCENT_DES,
     ORDER_BY_PORTFOLIO_PERCENT_ASC,
     ORDER_BY_PORTFOLIO_PERCENT_DES,
+    ORDER_BY_DATE_ASC,
+    ORDER_BY_DATE_DES,
 } from "./actions";
 
 import { order } from "./orderFunctions";
@@ -75,6 +77,16 @@ export const holdings = (state = initialState, action) => {
             return {
                 ...state,
                 holdings: [...order(state.holdings, "portfolioPercent", "des")],
+            };
+        case ORDER_BY_DATE_ASC:
+            return {
+                ...state,
+                holdings: [...order(state.holdings, "date", "asc")],
+            };
+        case ORDER_BY_DATE_DES:
+            return {
+                ...state,
+                holdings: [...order(state.holdings, "date", "des")],
             };
         default:
             return state;

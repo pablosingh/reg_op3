@@ -8,6 +8,8 @@ import {
     ORDER_BY_PROFITS_PERCENT_DES,
     ORDER_BY_PORTFOLIO_PERCENT_ASC,
     ORDER_BY_PORTFOLIO_PERCENT_DES,
+    ORDER_BY_DATE_ASC,
+    ORDER_BY_DATE_DES,
 } from "../redux/holdings/actions.js";
 import {
     ItemHoldingColor,
@@ -75,6 +77,35 @@ export default function CardFiltersButtons() {
                     >
                         <BtnInside>
                             <label>% del</label>
+                            <label>Portafolio</label>
+                            <ArrowDownwardIcon className="symbolBtn" />
+                        </BtnInside>
+                    </Btn>
+
+                    <Btn
+                        onClick={() =>
+                            dispatch({
+                                type: ORDER_BY_DATE_ASC,
+                                payload: null,
+                            })
+                        }
+                    >
+                        <BtnInside>
+                            <label>Fecha</label>
+                            <label>Portafolio</label>
+                            <ArrowUpwardIcon className="symbolBtn" />
+                        </BtnInside>
+                    </Btn>
+                    <Btn
+                        onClick={() =>
+                            dispatch({
+                                type: ORDER_BY_DATE_DES,
+                                payload: null,
+                            })
+                        }
+                    >
+                        <BtnInside>
+                            <label>Fecha</label>
                             <label>Portafolio</label>
                             <ArrowDownwardIcon className="symbolBtn" />
                         </BtnInside>

@@ -8,6 +8,8 @@ export const ORDER_BY_PROFITS_PERCENT_ASC = "ORDER_BY_PROFITS_PERCENT_ASC";
 export const ORDER_BY_PROFITS_PERCENT_DES = "ORDER_BY_PROFITS_PERCENT_DES";
 export const ORDER_BY_PORTFOLIO_PERCENT_ASC = "ORDER_BY_PORTFOLIO_PERCENT_ASC";
 export const ORDER_BY_PORTFOLIO_PERCENT_DES = "ORDER_BY_PORTFOLIO_PERCENT_DES";
+export const ORDER_BY_DATE_ASC = "ORDER_BY_DATE_ASC";
+export const ORDER_BY_DATE_DES = "ORDER_BY_DATE_DES";
 
 // function actualPrice
 // apiURL = `https://www.binance.us/api/v3/ticker/price?symbol=btcusdt`;

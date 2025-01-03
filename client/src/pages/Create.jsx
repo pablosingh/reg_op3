@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { loadHoldingsFromDB } from "../redux/holdings/actions";
-import CreateDate from "../components/CreateDate";
 import BuySellComponent from "../components/BuySellComponent";
 import {
     secondaryColor,
@@ -23,15 +22,8 @@ export default function Create() {
         exchange: "",
         comment: "",
     };
-    const today = new Date();
-    const initialDate = {
-        day: today.getDate(),
-        month: today.getMonth(),
-        year: today.getFullYear(),
-    };
     const [data, setData] = useState(initialData);
     const [buy, setBuy] = useState(true);
-    const [myDate, setMyDate] = useState(initialDate);
     const [showModal, setShowModal] = useState(false);
     const [stringDate, setStringDate] = useState("");
     const openModal = () => setShowModal(true);
@@ -47,9 +39,6 @@ export default function Create() {
     };
     const handlerBuy = (buyValue) => {
         setBuy(buyValue);
-    };
-    const handlerDate = (objDate) => {
-        setMyDate(objDate);
     };
     const addOpsToDB = async (toAdd) => {
         console.log(toAdd);
@@ -72,12 +61,12 @@ export default function Create() {
         }
     };
     const sending = (e) => {
-        const dateTicker = new Date(myDate.year, myDate.month, myDate.day);
         let arrayDate = stringDate.split("-");
         const toSend = {
             ...data,
-            // date: dateTicker,
-            date: new Date(new Date(arrayDate[0], arrayDate[1], arrayDate[2])),
+            date: new Date(
+                new Date(arrayDate[0], Number(arrayDate[1]) - 1, arrayDate[2]),
+            ),
             buy,
             number: Number.parseFloat(data.number),
             price: Number.parseFloat(data.price),
