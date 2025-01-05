@@ -63,6 +63,8 @@ export function loadHoldingsFromDB(userId) {
         var promesas = [];
         var subPromesas = [];
         var temporalActualTotalPortfolio = 0.0;
+        var notPricePromise = [];
+        var notPriceSubPromise = [];
         try {
             await fetch(`${apiUrl}holdings/${userId}`)
                 .then((js) => js.json())
@@ -98,64 +100,197 @@ export function loadHoldingsFromDB(userId) {
                                                 (holdingsToSend[i].profits *
                                                     100) /
                                                 holdingsToSend[i].initialTotal;
+                                        } else {
+                                            // console.log(holdingsToSend[i]);
+                                            notPricePromise.push(
+                                                fetch(
+                                                    `${apiUrl}daypricecmc/${holdingsToSend[i].ticker}`,
+                                                ),
+                                            );
                                         }
                                     });
                                 })
                                 // .then(() => console.log(holdingsToSend))
-                                .then(() =>
-                                    dispatch({
-                                        type: LOAD_INITIAL_TOTAL_PORTFOLIO,
-                                        payload:
-                                            calculateInitialTotalPortfolio(
-                                                holdingsToSend,
-                                            ),
-                                    }),
-                                )
                                 .then(() => {
-                                    temporalActualTotalPortfolio =
-                                        calculateActualTotalPortfolio(
-                                            holdingsToSend,
-                                        );
-                                    dispatch({
-                                        type: LOAD_ACTUAL_TOTAL_PORTFOLIO,
-                                        payload: temporalActualTotalPortfolio,
-                                    });
-                                })
-                                .then(() => {
-                                    holdingsToSend = [
-                                        ...addPortfolioPercent(
-                                            holdingsToSend,
-                                            temporalActualTotalPortfolio,
-                                        ),
-                                    ];
-                                })
-                                .then(() =>
-                                    dispatch({
-                                        type: LOAD_TOTAL_PROFITS,
-                                        payload:
-                                            calculateTotalProfits(
-                                                holdingsToSend,
-                                            ),
-                                    }),
-                                )
-                                .then(() =>
-                                    dispatch({
-                                        type: LOAD_TOTAL_PROFITS_PERCENT,
-                                        payload:
-                                            calculateTotalProfitsPercent(
-                                                holdingsToSend,
-                                            ),
-                                    }),
-                                )
-                                .then(() =>
-                                    dispatch({
-                                        type: LOAD_HOLD_FROM_DB,
-                                        payload: holdingsToSend,
-                                    }),
-                                );
+                                    Promise.all(notPricePromise)
+                                        .then((values) => {
+                                            values.forEach((v) =>
+                                                notPriceSubPromise.push(
+                                                    v.json(),
+                                                ),
+                                            );
+                                        })
+                                        .then(() => {
+                                            Promise.all(notPriceSubPromise)
+                                                .then((toCompare) => {
+                                                    let holdFound;
+                                                    toCompare.forEach((to) => {
+                                                        // console.log(holdingsToSend);
+                                                        holdFound =
+                                                            holdingsToSend.find(
+                                                                (hold) =>
+                                                                    hold.ticker ==
+                                                                    to.symbol,
+                                                            );
+                                                        holdFound.actualPrice =
+                                                            to.price;
+                                                        holdFound.profits =
+                                                            holdFound.amount *
+                                                                holdFound.actualPrice -
+                                                            holdFound.initialTotal;
+                                                        holdFound.profitsPercent =
+                                                            (holdFound.profits *
+                                                                100) /
+                                                            holdFound.initialTotal;
+                                                    });
+                                                    // console.log(notPriceSubPromise);
+                                                    // console.log(toCompare);
+                                                })
+                                                .then(() => {
+                                                    // console.log(holdingsToSend);
+                                                    dispatch({
+                                                        type: LOAD_INITIAL_TOTAL_PORTFOLIO,
+                                                        payload:
+                                                            calculateInitialTotalPortfolio(
+                                                                holdingsToSend,
+                                                            ),
+                                                    });
+                                                    temporalActualTotalPortfolio =
+                                                        calculateActualTotalPortfolio(
+                                                            holdingsToSend,
+                                                        );
+                                                    dispatch({
+                                                        type: LOAD_ACTUAL_TOTAL_PORTFOLIO,
+                                                        payload:
+                                                            temporalActualTotalPortfolio,
+                                                        // calculateActualTotalPortfolio(
+                                                        //     holdingsToSend,
+                                                        // ),
+                                                    });
+                                                    holdingsToSend = [
+                                                        ...addPortfolioPercent(
+                                                            holdingsToSend,
+                                                            temporalActualTotalPortfolio,
+                                                        ),
+                                                    ];
+                                                    // console.log(holdingsToSend);
+                                                    dispatch({
+                                                        type: LOAD_TOTAL_PROFITS,
+                                                        payload:
+                                                            calculateTotalProfits(
+                                                                holdingsToSend,
+                                                            ),
+                                                    });
+                                                    dispatch({
+                                                        type: LOAD_TOTAL_PROFITS_PERCENT,
+                                                        payload:
+                                                            calculateTotalProfitsPercent(
+                                                                holdingsToSend,
+                                                            ),
+                                                    });
+                                                    dispatch({
+                                                        type: LOAD_HOLD_FROM_DB,
+                                                        payload: holdingsToSend,
+                                                    });
+                                                    //
+                                                });
+                                        });
+                                });
+                            // .then(() =>
+                            //     dispatch({
+                            //         type: LOAD_INITIAL_TOTAL_PORTFOLIO,
+                            //         payload:
+                            //             calculateInitialTotalPortfolio(
+                            //                 holdingsToSend,
+                            //             ),
+                            //     }),
+                            // )
+                            // .then(() => {
+                            //     temporalActualTotalPortfolio =
+                            //         calculateActualTotalPortfolio(
+                            //             holdingsToSend,
+                            //         );
+                            //     dispatch({
+                            //         type: LOAD_ACTUAL_TOTAL_PORTFOLIO,
+                            //         payload: temporalActualTotalPortfolio,
+                            //     });
+                            // })
+                            // .then(() => {
+                            //     holdingsToSend = [
+                            //         ...addPortfolioPercent(
+                            //             holdingsToSend,
+                            //             temporalActualTotalPortfolio,
+                            //         ),
+                            //     ];
+                            // })
+                            // .then(() =>
+                            //     dispatch({
+                            //         type: LOAD_TOTAL_PROFITS,
+                            //         payload:
+                            //             calculateTotalProfits(
+                            //                 holdingsToSend,
+                            //             ),
+                            //     }),
+                            // )
+                            // .then(() =>
+                            //     dispatch({
+                            //         type: LOAD_TOTAL_PROFITS_PERCENT,
+                            //         payload:
+                            //             calculateTotalProfitsPercent(
+                            //                 holdingsToSend,
+                            //             ),
+                            //     }),
+                            // )
+                            // .then(() =>
+                            //     dispatch({
+                            //         type: LOAD_HOLD_FROM_DB,
+                            //         payload: holdingsToSend,
+                            //     }),
+                            // );
                         });
                 })
-                .catch((err) => console.error(err));
+                .catch((err) => console.error(err))
+                .finally(() => {});
+            // .then(() =>
+            //     dispatch({
+            //         type: LOAD_INITIAL_TOTAL_PORTFOLIO,
+            //         payload: calculateInitialTotalPortfolio(holdingsToSend),
+            //     }),
+            // )
+            // .then(() => {
+            //     temporalActualTotalPortfolio =
+            //         calculateActualTotalPortfolio(holdingsToSend);
+            //     dispatch({
+            //         type: LOAD_ACTUAL_TOTAL_PORTFOLIO,
+            //         payload: temporalActualTotalPortfolio,
+            //     });
+            // })
+            // .then(() => {
+            //     holdingsToSend = [
+            //         ...addPortfolioPercent(
+            //             holdingsToSend,
+            //             temporalActualTotalPortfolio,
+            //         ),
+            //     ];
+            // })
+            // .then(() =>
+            //     dispatch({
+            //         type: LOAD_TOTAL_PROFITS,
+            //         payload: calculateTotalProfits(holdingsToSend),
+            //     }),
+            // )
+            // .then(() =>
+            //     dispatch({
+            //         type: LOAD_TOTAL_PROFITS_PERCENT,
+            //         payload: calculateTotalProfitsPercent(holdingsToSend),
+            //     }),
+            // )
+            // .then(() =>
+            //     dispatch({
+            //         type: LOAD_HOLD_FROM_DB,
+            //         payload: holdingsToSend,
+            //     }),
+            // );
         } catch (error) {
             console.error(error);
         } finally {

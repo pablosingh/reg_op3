@@ -28,7 +28,7 @@ export default function CardHoldingTable(props) {
     const formatter = new Intl.NumberFormat("es-ES", {
         style: "decimal",
         minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
+        maximumFractionDigits: 6,
     });
     return (
         <TrContainer>
@@ -37,6 +37,7 @@ export default function CardHoldingTable(props) {
             <td>{amount}</td>
             <td>{formatter.format(initialPrice)}</td>
             <td>${formatter.format(actualPrice)}</td>
+            {/* <td>${actualPrice}</td> */}
             <td>${formatter.format(initialTotal)}</td>
             <td>${formatter.format(amount * actualPrice)}</td>
             <td className={`${profits > 0 ? "green" : "red"}`}>
