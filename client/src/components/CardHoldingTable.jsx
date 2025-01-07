@@ -28,25 +28,66 @@ export default function CardHoldingTable(props) {
     const formatter = new Intl.NumberFormat("es-ES", {
         style: "decimal",
         minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    });
+    const smallFormatter = new Intl.NumberFormat("es-ES", {
+        style: "decimal",
+        minimumFractionDigits: 2,
         maximumFractionDigits: 6,
     });
     return (
         <TrContainer>
             <td>{formattedDate}</td>
-            <td>{ticker}</td>
+            <td className="negrita">{ticker}</td>
             <td>{amount}</td>
-            <td>{formatter.format(initialPrice)}</td>
-            <td>${formatter.format(actualPrice)}</td>
-            {/* <td>${actualPrice}</td> */}
-            <td>${formatter.format(initialTotal)}</td>
-            <td>${formatter.format(amount * actualPrice)}</td>
-            <td className={`${profits > 0 ? "green" : "red"}`}>
-                ${formatter.format(profits)}
+            <td>
+                <div>
+                    ${" "}
+                    {initialPrice < 0.01
+                        ? smallFormatter.format(initialPrice)
+                        : formatter.format(initialPrice)}
+                </div>
+                <div>
+                    ${" "}
+                    {actualPrice < 0.01
+                        ? smallFormatter.format(actualPrice)
+                        : formatter.format(actualPrice)}
+                </div>
             </td>
-            <td className={`${profitsPercent > 0 ? "green" : "red"}`}>
-                % {formatter.format(profitsPercent)}
+            <td>
+                <div>
+                    ${" "}
+                    {initialTotal < 0.01
+                        ? smallFormatter.format(initialTotal)
+                        : formatter.format(initialTotal)}
+                </div>
+                <div>
+                    ${" "}
+                    {amount * actualPrice < 0.01
+                        ? smallFormatter.format(amount * actualPrice)
+                        : formatter.format(amount * actualPrice)}
+                </div>
             </td>
-            <td>% {formatter.format(portfolioPercent)}</td>
+            <td>
+                <div className={`${profitsPercent > 0 ? "green" : "red"}`}>
+                    %{" "}
+                    {profitsPercent < 0.01
+                        ? smallFormatter.format(profitsPercent)
+                        : formatter.format(profitsPercent)}
+                </div>
+                <div className={`${profits > 0 ? "green" : "red"}`}>
+                    ${" "}
+                    {profits < 0.01
+                        ? smallFormatter.format(profits)
+                        : formatter.format(profits)}
+                </div>
+            </td>
+            <td>
+                %{" "}
+                {portfolioPercent < 0.01
+                    ? smallFormatter.format(portfolioPercent)
+                    : formatter.format(portfolioPercent)}
+            </td>
         </TrContainer>
     );
 }
@@ -59,5 +100,8 @@ const TrContainer = styled.tr`
     .green {
         font-weight: bold;
         color: green;
+    }
+    .negrita {
+        font-weight: bold;
     }
 `;

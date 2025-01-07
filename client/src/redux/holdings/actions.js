@@ -39,13 +39,6 @@ export function calculateTotalProfits(arrayHoldings) {
     );
 }
 
-export function calculateTotalProfitsPercent(arrayHoldings) {
-    return arrayHoldings.reduce(
-        (acumulador, elemento) => acumulador + elemento.profitsPercent,
-        0,
-    );
-}
-
 export function addPortfolioPercent(
     arrayHoldings,
     temporalActualTotalPortfolio,
@@ -183,10 +176,7 @@ export function loadHoldingsFromDB(userId) {
                                                     });
                                                     dispatch({
                                                         type: LOAD_TOTAL_PROFITS_PERCENT,
-                                                        payload:
-                                                            calculateTotalProfitsPercent(
-                                                                holdingsToSend,
-                                                            ),
+                                                        payload: null,
                                                     });
                                                     dispatch({
                                                         type: LOAD_HOLD_FROM_DB,

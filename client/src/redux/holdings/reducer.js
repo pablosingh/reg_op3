@@ -54,7 +54,8 @@ export const holdings = (state = initialState, action) => {
         case LOAD_TOTAL_PROFITS_PERCENT:
             return {
                 ...state,
-                totalProfitsPercent: action.payload,
+                totalProfitsPercent:
+                    (state.totalProfits * 100) / state.initialTotalPortfolio,
             };
         case ORDER_BY_PROFITS_PERCENT_ASC:
             // console.log(state.holdings);
