@@ -37,6 +37,7 @@ export const holdings = (state = initialState, action) => {
                 userId: action.payload,
             };
         case LOAD_INITIAL_TOTAL_PORTFOLIO:
+            // console.log(action.payload);
             return {
                 ...state,
                 initialTotalPortfolio: action.payload,
