@@ -71,13 +71,13 @@ export default function CardHoldingTable(props) {
             <td>
                 <div className={`${profitsPercent > 0 ? "green" : "red"}`}>
                     %{" "}
-                    {profitsPercent < 0.01
+                    {profitsPercent < 0.01 && profitsPercent > -1
                         ? smallFormatter.format(profitsPercent)
                         : formatter.format(profitsPercent)}
                 </div>
                 <div className={`${profits > 0 ? "green" : "red"}`}>
                     ${" "}
-                    {profits < 0.01
+                    {profits < 0.01 && profits > -1
                         ? smallFormatter.format(profits)
                         : formatter.format(profits)}
                 </div>

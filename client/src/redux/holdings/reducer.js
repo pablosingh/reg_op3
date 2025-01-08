@@ -11,6 +11,7 @@ import {
     ORDER_BY_PORTFOLIO_PERCENT_DES,
     ORDER_BY_DATE_ASC,
     ORDER_BY_DATE_DES,
+    LOAD_ACTUAL_HOLDING,
 } from "./actions";
 
 import { order } from "./orderFunctions";
@@ -22,6 +23,7 @@ const initialState = {
     actualTotalPortfolio: 0.0,
     totalProfits: 0.0,
     totalProfitsPercent: 0.0,
+    actualHolding: {},
 };
 
 export const holdings = (state = initialState, action) => {
@@ -89,6 +91,21 @@ export const holdings = (state = initialState, action) => {
             return {
                 ...state,
                 holdings: [...order(state.holdings, "date", "des")],
+            };
+        case LOAD_ACTUAL_HOLDING:
+            // console.log(action.payload);
+            // console.log(state.holdings);
+            // let aux = state.holdings.find((hold) => {
+            //     console.log(hold);
+            //     return hold.ticker === action.payload.toUpperCase();
+            // });
+            // console.log(aux);
+            return {
+                ...state,
+                // actualHolding: aux,
+                actualHolding: state.holdings.find(
+                    (hold) => hold.ticker == action.payload.toUpperCase(),
+                ),
             };
         default:
             return state;
