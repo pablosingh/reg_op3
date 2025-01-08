@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 export default function CardHoldingTable(props) {
@@ -36,9 +37,13 @@ export default function CardHoldingTable(props) {
         maximumFractionDigits: 6,
     });
     return (
-        <TrContainer>
+        <TrContainer onClick={() => console.log("click")}>
             <td>{formattedDate}</td>
-            <td className="negrita">{ticker}</td>
+            <td className="negrita">
+                <Link to={`/hold/${ticker}`} className="link">
+                    {ticker}
+                </Link>
+            </td>
             <td>{amount}</td>
             <td>
                 <div>
@@ -103,5 +108,9 @@ const TrContainer = styled.tr`
     }
     .negrita {
         font-weight: bold;
+    }
+    .link {
+        text-decoration: none;
+        color: black;
     }
 `;
