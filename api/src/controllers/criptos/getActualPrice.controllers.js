@@ -37,9 +37,9 @@ export const getActualPriceDB = async (req, res) => {
     }
 };
 
-export const getActualPriceCMC = async (req, res) => {
-    const { cripto } = req.params;
-    console.log(cripto);
+export const getActualPriceCMCfunction = async (cripto) => {
+    // const { cripto } = req.params;
+    // console.log(cripto);
     try {
         await fetch(
             `https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=${cripto.toUpperCase()}`,
@@ -50,6 +50,8 @@ export const getActualPriceCMC = async (req, res) => {
         )
             .then((responseApi) => responseApi.json())
             .then((response) => {
+                // console.log("CMC");
+                // console.log(response);
                 let toSend = {};
                 for (const key in response.data) {
                     toSend.symbol = response.data[key].symbol;
@@ -57,13 +59,17 @@ export const getActualPriceCMC = async (req, res) => {
                     toSend.price = response.data[key].quote.USD.price;
                     break;
                 }
-                res.json({
-                    // response,
-                    ...toSend,
-                });
-            })
-            .catch((err) => res.json({ message: err }));
+                console.log("toSend");
+                console.log(toSend);
+                return toSend;
+            });
     } catch (error) {
-        res.json({ message: error });
+        return { message: error };
     }
+};
+
+export const getActualPriceCMC = async (req, res) => {
+    const { cripto } = req.params;
+    const response = await getActualPriceCMCfunction(cripto);
+    res.json(response);
 };

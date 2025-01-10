@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
     addCripto,
     getCriptos,
+    addMissingCripto,
 } from "../controllers/criptos/criptos.controllers.js";
 import {
     getActualPriceCMC,
@@ -13,5 +14,6 @@ router.get("/criptos", getCriptos); // Trae todas las criptos de la DB
 router.get("/dayprice/:cripto", getActualPriceDB); // cripto mas actual
 router.get("/daypricecmc/:cripto", getActualPriceCMC);
 router.post("/cripto", addCripto);
+router.post("/addmissingcripto", addMissingCripto);
 
 export default router;
