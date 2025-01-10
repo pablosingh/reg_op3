@@ -87,7 +87,7 @@ export default function CardHoldingTable(props) {
                         : formatter.format(profits)}
                 </div>
             </td>
-            <td>
+            <td className={`${portfolioPercent > 4 ? "highPercent" : " "}`}>
                 %{" "}
                 {portfolioPercent < 0.01
                     ? smallFormatter.format(portfolioPercent)
@@ -100,11 +100,15 @@ export default function CardHoldingTable(props) {
 const TrContainer = styled.tr`
     .red {
         font-weight: bold;
-        color: red;
+        // color: red;
+        color: white;
+        background-color: red;
     }
     .green {
         font-weight: bold;
-        color: green;
+        // color: green;
+        color: white;
+        background-color: green;
     }
     .negrita {
         font-weight: bold;
@@ -112,5 +116,10 @@ const TrContainer = styled.tr`
     .link {
         text-decoration: none;
         color: black;
+    }
+    .highPercent {
+        color: white;
+        font-weight: bold;
+        background-color: blue;
     }
 `;

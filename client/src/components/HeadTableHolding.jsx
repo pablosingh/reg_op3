@@ -53,7 +53,7 @@ const TableContainer = styled.table`
         z-index: 1;
     }
     td {
-        padding: 0.2em 0.4em;
+        padding: 0.05em 0.2em;
         border: 1px solid black;
     }
     tbody tr:nth-child(odd) {

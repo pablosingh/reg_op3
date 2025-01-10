@@ -8,8 +8,8 @@ import { LOAD_ACTUAL_HOLDING } from "../redux/holdings/actions";
 export default function Hold() {
     const params = useParams();
     const dispatch = useDispatch();
-    const state = useSelector((state) => state);
-    const actualHold = useSelector((state) => state?.holdings.holdings);
+    // const state = useSelector((state) => state);
+    const actualHold = useSelector((state) => state?.holdings?.actualHolding);
     useEffect(() => {
         console.log(params);
         dispatch({
@@ -20,7 +20,7 @@ export default function Hold() {
     return (
         <div>
             {/* Hold : {params.hold} */}
-            {/* <button onClick={() => console.log(state)}>estado</button> */}
+            {/* <button onClick={() => console.log(actualHold)}>estado</button> */}
             <CardHolding ticker={actualHold} />
             {/* <CardTicker /> */}
         </div>
