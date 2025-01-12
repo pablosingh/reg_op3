@@ -56,6 +56,7 @@ export const initialCriptoLoadingCMCtwo = async () => {
     console.log("Carga inicial de DB desde API CoinMarketCap 2");
     let arrayCripto = [];
     let arrayCriptoDB = [];
+    let daysPassed = 0;
     const url = `https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest`;
     const headers = {
         "Content-Type": "application/json",
@@ -66,51 +67,60 @@ export const initialCriptoLoadingCMCtwo = async () => {
         headers: headers,
     };
     try {
-        const arrayToCreateCMC = await fetch(url, options)
-            .then((js) => js.json())
-            .then((arrayRes) => {
-                arrayRes.data.map((element) => {
-                    arrayCripto.push({
-                        cripto: element.symbol,
-                        price: element.quote.USD.price,
-                    });
-                });
-                return arrayCripto;
-            });
-        // .then(async (arrayToCreateCMC) => {
-        // const slicedArray = arrayToCreate.slice(1, 30);// mas corto por deploy
-        // console.log(arrayToCreateCMC);
         arrayCriptoDB = await Cripto.findAll();
         if (arrayCriptoDB.length > 0) {
-            arrayCriptoDB.forEach(async (criptoDB) => {
-                const foundElement = arrayToCreateCMC.find(
-                    (criptoCMC) => criptoCMC.cripto == criptoDB.cripto,
-                );
-                if (foundElement) {
-                    criptoDB.price = foundElement.price;
-                    criptoDB.updatePrice = new Date();
-                    await criptoDB.save();
-                } else {
-                    console.log("Sin precio = " + criptoDB.cripto);
-                    const criptoNoPrice = await getActualPriceCMCfunction(
-                        criptoDB.cripto,
+            const today = new Date();
+            const priceDate = new Date(arrayCriptoDB[0].updatePrice);
+            const differenceDayMs = today - priceDate;
+            daysPassed = Math.floor(differenceDayMs / (1000 * 60 * 60 * 24));
+            console.log(daysPassed);
+        }
+        if (daysPassed >= 1) {
+            const arrayToCreateCMC = await fetch(url, options)
+                .then((js) => js.json())
+                .then((arrayRes) => {
+                    arrayRes.data.map((element) => {
+                        arrayCripto.push({
+                            cripto: element.symbol,
+                            price: element.quote.USD.price,
+                        });
+                    });
+                    return arrayCripto;
+                });
+            // .then(async (arrayToCreateCMC) => {
+            // const slicedArray = arrayToCreate.slice(1, 30);// mas corto por deploy
+            // console.log(arrayToCreateCMC);
+            if (arrayCriptoDB.length > 0) {
+                arrayCriptoDB.forEach(async (criptoDB) => {
+                    const foundElement = arrayToCreateCMC.find(
+                        (criptoCMC) => criptoCMC.cripto == criptoDB.cripto,
                     );
-                    if (criptoNoPrice) {
-                        criptoDB.price = criptoNoPrice.price;
+                    if (foundElement) {
+                        criptoDB.price = foundElement.price;
                         criptoDB.updatePrice = new Date();
                         await criptoDB.save();
+                    } else {
+                        console.log("Sin precio = " + criptoDB.cripto);
+                        const criptoNoPrice = await getActualPriceCMCfunction(
+                            criptoDB.cripto,
+                        );
+                        if (criptoNoPrice) {
+                            criptoDB.price = criptoNoPrice.price;
+                            criptoDB.updatePrice = new Date();
+                            await criptoDB.save();
+                        }
                     }
-                }
-            });
-        } else {
-            arrayToCreateCMC.forEach(async (toCreateCMC) => {
-                const createdCripto = await Cripto.create({
-                    cripto: toCreateCMC.cripto.toUpperCase(),
-                    price: toCreateCMC.price,
-                    updatePrice: new Date(),
                 });
-                console.log(createdCripto);
-            });
+            } else {
+                arrayToCreateCMC.forEach(async (toCreateCMC) => {
+                    const createdCripto = await Cripto.create({
+                        cripto: toCreateCMC.cripto.toUpperCase(),
+                        price: toCreateCMC.price,
+                        updatePrice: new Date(),
+                    });
+                    console.log(createdCripto);
+                });
+            }
         }
         // })
         // .catch((e) => console.error(e));

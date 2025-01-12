@@ -21,7 +21,7 @@ export const getUserByEmail = async (req, res) => {
                 email,
             },
         });
-        console.log(foundUser);
+        // console.log(foundUser);
         if (foundUser) res.json(foundUser);
         else {
             const newUser = await User.create({
