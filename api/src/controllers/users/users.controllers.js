@@ -2,7 +2,7 @@ import Operation from "../../models/Operation.js";
 import User from "../../models/User.js";
 
 export const createUser = async (req, res) => {
-    console.log(req.body);
+    // console.log(req.body);
     const { user, email, name } = req.body;
     try {
         const newUser = await User.create({ user, email, name });
@@ -14,7 +14,7 @@ export const createUser = async (req, res) => {
 
 export const getUserByEmail = async (req, res) => {
     const { email, name } = req.body;
-    console.log(req.body);
+    // console.log(req.body);
     try {
         const foundUser = await User.findOne({
             where: {

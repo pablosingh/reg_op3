@@ -1,4 +1,5 @@
 import Cripto from "../../models/Cripto.js";
+import { getActualPriceCMCfunction } from "./getActualPrice.controllers.js";
 
 export const initialCriptoLoadingCMC = async () => {
     console.log("Carga inicial de DB desde API CoinMarketCap");
@@ -50,11 +51,80 @@ export const initialCriptoLoadingCMC = async () => {
     }
     return arrayCripto;
 };
+// ====================================================
+export const initialCriptoLoadingCMCtwo = async () => {
+    console.log("Carga inicial de DB desde API CoinMarketCap 2");
+    let arrayCripto = [];
+    let arrayCriptoDB = [];
+    const url = `https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest`;
+    const headers = {
+        "Content-Type": "application/json",
+        "X-CMC_PRO_API_KEY": "6b555911-d0f2-417f-9bd1-95cf5ea375aa",
+    };
+    const options = {
+        method: "GET",
+        headers: headers,
+    };
+    try {
+        const arrayToCreateCMC = await fetch(url, options)
+            .then((js) => js.json())
+            .then((arrayRes) => {
+                arrayRes.data.map((element) => {
+                    arrayCripto.push({
+                        cripto: element.symbol,
+                        price: element.quote.USD.price,
+                    });
+                });
+                return arrayCripto;
+            });
+        // .then(async (arrayToCreateCMC) => {
+        // const slicedArray = arrayToCreate.slice(1, 30);// mas corto por deploy
+        // console.log(arrayToCreateCMC);
+        arrayCriptoDB = await Cripto.findAll();
+        if (arrayCriptoDB.length > 0) {
+            arrayCriptoDB.forEach(async (criptoDB) => {
+                const foundElement = arrayToCreateCMC.find(
+                    (criptoCMC) => criptoCMC.cripto == criptoDB.cripto,
+                );
+                if (foundElement) {
+                    criptoDB.price = foundElement.price;
+                    criptoDB.updatePrice = new Date();
+                    await criptoDB.save();
+                } else {
+                    console.log("Sin precio = " + criptoDB.cripto);
+                    const criptoNoPrice = await getActualPriceCMCfunction(
+                        criptoDB.cripto,
+                    );
+                    if (criptoNoPrice) {
+                        criptoDB.price = criptoNoPrice.price;
+                        criptoDB.updatePrice = new Date();
+                        await criptoDB.save();
+                    }
+                }
+            });
+        } else {
+            arrayToCreateCMC.forEach(async (toCreateCMC) => {
+                const createdCripto = await Cripto.create({
+                    cripto: toCreateCMC.cripto.toUpperCase(),
+                    price: toCreateCMC.price,
+                    updatePrice: new Date(),
+                });
+                console.log(createdCripto);
+            });
+        }
+        // })
+        // .catch((e) => console.error(e));
+    } catch (error) {
+        console.error(error);
+    }
+    return arrayCripto;
+};
 
 // ====================================
 
 export const ejecutarFuncionDiaria = () => {
-    initialCriptoLoadingCMC();
+    // initialCriptoLoadingCMC();
+    initialCriptoLoadingCMCtwo();
     programarEjecucionDiaria();
 };
 
@@ -67,5 +137,3 @@ export const programarEjecucionDiaria = () => {
     const tiempoRestante = proximaEjecucion - ahora;
     setTimeout(ejecutarFuncionDiaria, tiempoRestante);
 };
-// Iniciar la primera ejecución
-// programarEjecucionDiaria();

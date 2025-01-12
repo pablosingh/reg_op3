@@ -6,16 +6,19 @@ import {
 
 export const addMissingCripto = async (req, res) => {
     const { cripto } = req.body;
+    let requestCMC;
     try {
-        const requestCMC = await getActualPriceCMCfunction(cripto);
-        console.log("requestCMC");
-        console.log(requestCMC);
-        const newCripto = await Cripto.create({
-            cripto: cripto.toUpperCase(),
-            price: requestCMC.price,
-            updatePrice: new Date(),
-        });
-        res.json(newCripto);
+        requestCMC = await getActualPriceCMCfunction(cripto);
+        // console.log("requestCMC");
+        // console.log(requestCMC);
+        if (!requestCMC) {
+            const newCripto = await Cripto.create({
+                cripto: cripto.toUpperCase(),
+                price: requestCMC.price,
+                updatePrice: new Date(),
+            });
+            res.json(newCripto);
+        }
     } catch (error) {
         res.json({ message: error });
     }

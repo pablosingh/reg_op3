@@ -9,6 +9,7 @@ import Task from "./models/Task.js";
 
 import {
     initialCriptoLoadingCMC,
+    initialCriptoLoadingCMCtwo,
     programarEjecucionDiaria,
 } from "./controllers/criptos/initDBcmc.controllers.js";
 
@@ -27,7 +28,8 @@ sequelize
     .then(() => {
         app.listen(port, async () => {
             console.log("Server on port ", port);
-            initialCriptoLoadingCMC();
+            // initialCriptoLoadingCMC();
+            initialCriptoLoadingCMCtwo();
             programarEjecucionDiaria();
         });
     })

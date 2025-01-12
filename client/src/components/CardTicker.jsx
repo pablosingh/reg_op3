@@ -18,7 +18,7 @@ export default function CardTicker(props) {
     const formatter = new Intl.NumberFormat("es-ES", {
         style: "decimal",
         minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
+        maximumFractionDigits: 6,
     });
     return (
         <Container>

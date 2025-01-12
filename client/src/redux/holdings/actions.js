@@ -90,15 +90,32 @@ export function loadHoldingsFromDB(userId) {
             });
             const notPrices = await Promise.all(notPricePromises);
             notPrices.forEach((notPrice) => {
+                console.log(notPrice);
+                console.log(
+                    "Agregando una cripto que faltaba en BD: " +
+                        notPrice.symbol,
+                );
+                fetch(`${apiUrl}addmissingcripto`, {
+                    method: "POST",
+                    mode: "cors",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        cripto: `${notPrice.symbol}`,
+                    }),
+                }).then((res) => res.json());
                 const holdFound = holdingsToSend.find(
                     (hold) => hold.ticker == notPrice.symbol,
                 );
-                holdFound.actualPrice = notPrice.price;
-                holdFound.profits =
-                    holdFound.amount * holdFound.actualPrice -
-                    holdFound.initialTotal;
-                holdFound.profitsPercent =
-                    (holdFound.profits * 100) / holdFound.initialTotal;
+                if (holdFound) {
+                    holdFound.actualPrice = notPrice.price;
+                    holdFound.profits =
+                        holdFound.amount * holdFound.actualPrice -
+                        holdFound.initialTotal;
+                    holdFound.profitsPercent =
+                        (holdFound.profits * 100) / holdFound.initialTotal;
+                }
             });
             dispatch({
                 type: LOAD_INITIAL_TOTAL_PORTFOLIO,
@@ -142,7 +159,7 @@ export function loadUserId({ email, name }) {
                 email,
                 name,
             }),
-            mode: "cors", // Modo CORS
+            mode: "cors",
             headers: {
                 "Content-Type": "application/json",
             },
