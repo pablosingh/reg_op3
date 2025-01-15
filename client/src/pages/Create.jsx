@@ -42,8 +42,9 @@ export default function Create() {
     };
     const addOpsToDB = async (toAdd) => {
         console.log(toAdd);
-        const apiUrl =
-            process.env.REACT_APP_API_URL || "http://localhost:3001/";
+        // const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:3001/";
+        const apiUrl = "http://localhost:3001/";
+        console.log(apiUrl);
         try {
             await fetch(`${apiUrl}operations`, {
                 method: "POST",
@@ -53,7 +54,7 @@ export default function Create() {
                 body: JSON.stringify(toAdd),
             })
                 .then((js) => js.json())
-                // .then(res => console.log(res))
+                .then((res) => console.log(res))
                 .then(() => dispatch(loadHoldingsFromDB(state.holdings.userId)))
                 .catch((e) => console.error(e));
         } catch (err) {

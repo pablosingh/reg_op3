@@ -69,8 +69,10 @@ export function loadHoldingsFromDB(userId) {
                 );
             }
             const dayPrices = await Promise.all(dayPricePromises);
+            console.log(dayPrices);
             dayPrices.forEach((sub, i) => {
                 if (sub) {
+                    // console.log(sub);
                     holdingsToSend[i].actualPrice = sub.price;
                     holdingsToSend[i].profits =
                         holdingsToSend[i].actualPrice *
@@ -91,10 +93,10 @@ export function loadHoldingsFromDB(userId) {
             const notPrices = await Promise.all(notPricePromises);
             notPrices.forEach((notPrice) => {
                 console.log(notPrice);
-                console.log(
-                    "Agregando una cripto que faltaba en BD: " +
-                        notPrice.symbol,
-                );
+                // console.log(
+                //     "Agregando una cripto que faltaba en BD: " +
+                //         notPrice.symbol,
+                // );
                 fetch(`${apiUrl}addmissingcripto`, {
                     method: "POST",
                     mode: "cors",
@@ -179,3 +181,5 @@ export function loadUserId({ email, name }) {
         }
     };
 }
+
+export function initAllDispatch() {}

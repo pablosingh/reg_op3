@@ -87,9 +87,6 @@ export const initialCriptoLoadingCMCtwo = async () => {
                     });
                     return arrayCripto;
                 });
-            // .then(async (arrayToCreateCMC) => {
-            // const slicedArray = arrayToCreate.slice(1, 30);// mas corto por deploy
-            // console.log(arrayToCreateCMC);
             if (arrayCriptoDB.length > 0) {
                 arrayCriptoDB.forEach(async (criptoDB) => {
                     const foundElement = arrayToCreateCMC.find(
@@ -122,8 +119,6 @@ export const initialCriptoLoadingCMCtwo = async () => {
                 });
             }
         }
-        // })
-        // .catch((e) => console.error(e));
     } catch (error) {
         console.error(error);
     }

@@ -14,7 +14,7 @@ export const createOperation = async (req, res) => {
         comment,
         UserId,
     } = req.body;
-    // console.log(req.body);
+    console.log(req.body);
     // const dateTicker = new Date();
     // const formattedDate = dateTicker.toLocaleDateString('es-ES', {
     //     day: '2-digit',
