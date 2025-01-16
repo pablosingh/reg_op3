@@ -41,27 +41,23 @@ export default function Create() {
         setBuy(buyValue);
     };
     const addOpsToDB = async (toAdd) => {
-        console.log(toAdd);
         // const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:3001/";
-        const apiUrl = "http://localhost:3001/";
-        console.log(apiUrl);
-        try {
-            await fetch(`${apiUrl}operations`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(toAdd),
-            })
-                .then((js) => js.json())
-                .then((res) => console.log(res))
-                .then(() => dispatch(loadHoldingsFromDB(state.holdings.userId)))
-                .catch((e) => console.error(e));
-        } catch (err) {
-            console.error(err);
-        }
+        const bodyToSend = JSON.stringify(toAdd);
+        console.log(bodyToSend);
+        const otraUrl = "http://localhost:3001/operations";
+        // await fetch(`${apiUrl}operations`, {
+        const response = await fetch(otraUrl, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            // body: JSON.stringify(toAdd),
+            body: bodyToSend,
+        }).then((js) => js.json());
+        dispatch(loadHoldingsFromDB(state.holdings.userId));
+        console.log(response);
     };
-    const sending = (e) => {
+    const sending = () => {
         let arrayDate = stringDate.split("-");
         const toSend = {
             ...data,

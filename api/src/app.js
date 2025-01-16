@@ -4,23 +4,37 @@ import holdingRoutes from "./routes/holdings.routes.js";
 import operationsRoutes from "./routes/operations.routes.js";
 import tasksRoutes from "./routes/tasks.routes.js";
 import usersRoutes from "./routes/users.routes.js";
+import cors from "cors";
 
 const app = express();
 
+// app.options("*", (req, res) => {
+//     res.sendStatus(200); // Respuesta para solicitudes preflight
+// });
+
 app.use(express.json());
-app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Credentials", "true");
-    res.header(
-        "Access-Control-Allow-Headers",
-        "Origin, X-Requested-With, Content-Type, Accept",
-    );
-    res.header(
-        "Access-Control-Allow-Methods",
-        "GET, POST, OPTIONS, PUT, DELETE",
-    );
-    next();
-});
+
+const corsOptions = {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+};
+app.use(cors(corsOptions));
+
+// app.use((req, res, next) => {
+//     res.header("Access-Control-Allow-Origin", "*");
+//     res.header("Access-Control-Allow-Credentials", "true");
+//     res.header(
+//         "Access-Control-Allow-Headers",
+//         "Origin, X-Requested-With, Content-Type, Accept",
+//     );
+//     res.header(
+//         "Access-Control-Allow-Methods",
+//         "GET, POST, OPTIONS, PUT, DELETE",
+//     );
+//     next();
+// });
 
 app.use(criptoRoutes);
 app.use(holdingRoutes);

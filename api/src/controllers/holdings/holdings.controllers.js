@@ -5,6 +5,7 @@ import Task from "../../models/Task.js";
 
 export const getHoldingsByUserId = async (req, res) => {
     const { userId } = req.params;
+    console.log("Cargando Holdings");
     try {
         const foundHoldings = await Holding.findAll({
             where: {

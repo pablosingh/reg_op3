@@ -91,12 +91,16 @@ export function loadHoldingsFromDB(userId) {
                 }
             });
             const notPrices = await Promise.all(notPricePromises);
-            notPrices.forEach((notPrice) => {
-                console.log(notPrice);
-                // console.log(
-                //     "Agregando una cripto que faltaba en BD: " +
-                //         notPrice.symbol,
-                // );
+            notPrices.forEach((notPrice, index) => {
+                console.log(
+                    `Respuesta de notPricePromises[${index}]:`,
+                    notPrice,
+                );
+                // console.log(notPrice);
+                console.log(
+                    "Agregando una cripto que faltaba en BD: " +
+                        notPrice.symbol,
+                );
                 fetch(`${apiUrl}addmissingcripto`, {
                     method: "POST",
                     mode: "cors",
