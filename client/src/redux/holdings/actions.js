@@ -110,7 +110,9 @@ export function loadHoldingsFromDB(userId) {
                     body: JSON.stringify({
                         cripto: `${notPrice.symbol}`,
                     }),
-                }).then((res) => res.json());
+                })
+                    .then((res) => res.json())
+                    .catch((e) => console.log(e));
                 const holdFound = holdingsToSend.find(
                     (hold) => hold.ticker == notPrice.symbol,
                 );

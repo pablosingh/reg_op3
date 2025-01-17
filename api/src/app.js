@@ -14,28 +14,41 @@ const app = express();
 
 app.use(express.json());
 
+app.use((req, res, next) => {
+    res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000"); // Origen permitido
+    res.setHeader(
+        "Access-Control-Allow-Methods",
+        "GET, POST, PUT, DELETE, OPTIONS",
+    ); // Métodos permitidos
+    res.setHeader(
+        "Access-Control-Allow-Headers",
+        "Content-Type, Authorization",
+    ); // Cabeceras permitidas
+    res.setHeader("Access-Control-Allow-Credentials", "true"); // Permitir cookies y credenciales
+    next();
+});
+
 const corsOptions = {
     origin: "http://localhost:3000",
+    // origin: "*",
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
 };
-app.use(cors(corsOptions));
 
-// app.use((req, res, next) => {
-//     res.header("Access-Control-Allow-Origin", "*");
-//     res.header("Access-Control-Allow-Credentials", "true");
-//     res.header(
-//         "Access-Control-Allow-Headers",
-//         "Origin, X-Requested-With, Content-Type, Accept",
-//     );
+app.options("*", cors(corsOptions));
+
+// app.options("*", (req, res) => {
+//     res.header("Access-Control-Allow-Origin", "http://localhost:3000");
 //     res.header(
 //         "Access-Control-Allow-Methods",
-//         "GET, POST, OPTIONS, PUT, DELETE",
+//         "GET, POST, PUT, DELETE, OPTIONS",
 //     );
-//     next();
+//     res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+//     res.header("Access-Control-Allow-Credentials", "true");
+//     res.sendStatus(200);
 // });
-
+app.use(cors(corsOptions));
 app.use(criptoRoutes);
 app.use(holdingRoutes);
 app.use(operationsRoutes);

@@ -26,11 +26,12 @@ const port = process.env.PORT || 3001;
 sequelize
     .sync({ force: false })
     .then(() => {
-        app.listen(port, async () => {
+        const server = app.listen(port, async () => {
             console.log("Server on port ", port);
             // initialCriptoLoadingCMC();
             initialCriptoLoadingCMCtwo();
             programarEjecucionDiaria();
         });
+        server.timeout = 2000;
     })
     .catch((e) => console.error(e));
