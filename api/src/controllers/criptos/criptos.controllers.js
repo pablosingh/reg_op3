@@ -24,6 +24,22 @@ export const addMissingCripto = async (req, res) => {
     }
 };
 
+export const addArrayMissingCripto = async (req, res) => {
+    const { arrayCripto } = req.body;
+    let requestCMCpromises = arrayCripto?.map(async (cripto) => {
+        let criptoResponse = await getActualPriceCMCfunction(
+            cripto?.toUpperCase(),
+        );
+        return {
+            ticker: cripto?.toUpperCase(),
+            price: criptoResponse.price,
+        };
+    });
+    let arrayToReturn = await Promise.all(requestCMCpromises);
+    console.log(arrayToReturn);
+    res.json(arrayToReturn);
+};
+
 export const addCripto = async (req, res) => {
     const { cripto } = req.body;
     try {
