@@ -149,8 +149,8 @@ export const getHoldingsByUserIdWithActualPrices = async (req, res) => {
                 (holdToSend.profits * 100) / holdToSend.initialTotal;
             return holdToSend;
         });
-        console.log("==============================allHoldingsToSend");
-        console.log(allHoldingsToSend);
+        // console.log("==============================allHoldingsToSend");
+        // console.log(allHoldingsToSend);
 
         res.json(allHoldingsToSend);
     } catch (error) {

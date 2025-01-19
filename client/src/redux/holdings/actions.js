@@ -166,6 +166,50 @@ export function loadHoldingsFromDB(userId) {
     };
 }
 
+export function loadHoldingsFromDBwithActualPrice(userId) {
+    return async function (dispatch) {
+        let holdingsToSend = [];
+        let temporalActualTotalPortfolio = 0.0;
+        try {
+            // solicitamos todos los holdings a DB
+            holdingsToSend = await fetch(
+                `${apiUrl}holdings/all/${userId}`,
+            ).then((js) => js.json());
+
+            dispatch({
+                type: LOAD_INITIAL_TOTAL_PORTFOLIO,
+                payload: calculateInitialTotalPortfolio(holdingsToSend),
+            });
+            temporalActualTotalPortfolio =
+                calculateActualTotalPortfolio(holdingsToSend);
+            dispatch({
+                type: LOAD_ACTUAL_TOTAL_PORTFOLIO,
+                payload: temporalActualTotalPortfolio,
+            });
+            holdingsToSend = [
+                ...addPortfolioPercent(
+                    holdingsToSend,
+                    temporalActualTotalPortfolio,
+                ),
+            ];
+            dispatch({
+                type: LOAD_TOTAL_PROFITS,
+                payload: calculateTotalProfits(holdingsToSend),
+            });
+            dispatch({
+                type: LOAD_TOTAL_PROFITS_PERCENT,
+                payload: null,
+            });
+            dispatch({
+                type: LOAD_HOLD_FROM_DB,
+                payload: holdingsToSend,
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    };
+}
+
 export function loadUserId({ email, name }) {
     return async function (dispatch) {
         const options = {
@@ -187,7 +231,8 @@ export function loadUserId({ email, name }) {
                     // console.log(usr);
                     return usr.id;
                 })
-                .then((id) => dispatch(loadHoldingsFromDB(id)))
+                // .then((id) => dispatch(loadHoldingsFromDB(id)))
+                .then((id) => dispatch(loadHoldingsFromDBwithActualPrice(id)))
                 .catch((e) => console.error(e));
         } catch (error) {
             console.error(error);
