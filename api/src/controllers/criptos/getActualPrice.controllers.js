@@ -51,9 +51,9 @@ export const getActualPriceCMCfunction = async (cripto) => {
         )
             .then((responseApi) => responseApi.json())
             .then((response) => {
+                // console.log(response);
                 for (const key in response.data) {
-                    toSend.symbol = response.data[key].symbol;
-                    toSend.cripto = response.data[key].name;
+                    toSend.cripto = cripto.toUpperCase();
                     toSend.price = response.data[key].quote.USD.price;
                     break;
                 }
@@ -68,5 +68,36 @@ export const getActualPriceCMCfunction = async (cripto) => {
 export const getActualPriceCMC = async (req, res) => {
     const { cripto } = req.params;
     const response = await getActualPriceCMCfunction(cripto);
+    if (!response) {
+        console.log("Cripto CMC Fallo");
+        console.log(response);
+    } else {
+        console.log(response);
+    }
     res.json(response);
+};
+
+export const getActualPriceDBfunction = async (cripto) => {
+    try {
+        const foundCripto = await Cripto.findOne({
+            where: {
+                cripto: cripto.toUpperCase(),
+            },
+            order: [["updatePrice", "DESC"]],
+        });
+        if (foundCripto) {
+            return {
+                cripto,
+                price: foundCripto.price,
+            };
+        } else {
+            return {
+                cripto,
+                price: null,
+            };
+        }
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
 };

@@ -58,9 +58,11 @@ export function loadHoldingsFromDB(userId) {
         let notPricePromises = [];
         let dayPricePromises = [];
         try {
+            // solicitamos todos los holdings a DB
             holdingsToSend = await fetch(`${apiUrl}holdings/${userId}`).then(
                 (js) => js.json(),
             );
+            // Consulta de precios actuales DIARIOS en DB
             if (holdingsToSend.length) {
                 dayPricePromises = holdingsToSend.map((hold) =>
                     fetch(`${apiUrl}dayprice/${hold.ticker}`).then((res) =>
@@ -69,9 +71,12 @@ export function loadHoldingsFromDB(userId) {
                 );
             }
             const dayPrices = await Promise.all(dayPricePromises);
-            console.log(dayPrices);
+            // console.log("dayPrices");
+            // console.log(dayPrices);
+            // Mapeo de Holdings con Precios actuales
             dayPrices.forEach((sub, i) => {
                 if (sub) {
+                    // Este if es de precios en DB
                     // console.log(sub);
                     holdingsToSend[i].actualPrice = sub.price;
                     holdingsToSend[i].profits =
@@ -83,6 +88,8 @@ export function loadHoldingsFromDB(userId) {
                         (holdingsToSend[i].profits * 100) /
                         holdingsToSend[i].initialTotal;
                 } else {
+                    // Este else es de los que no estan DB, se piden a CMC
+                    // console.log("CMC => " + holdingsToSend[i].ticker);
                     notPricePromises.push(
                         fetch(
                             `${apiUrl}daypricecmc/${holdingsToSend[i].ticker}`,
@@ -91,30 +98,30 @@ export function loadHoldingsFromDB(userId) {
                 }
             });
             const notPrices = await Promise.all(notPricePromises);
-            notPrices.forEach((notPrice, index) => {
-                console.log(
-                    `Respuesta de notPricePromises[${index}]:`,
-                    notPrice,
-                );
+            console.log("notPrices");
+            console.log(notPrices);
+            notPrices.forEach((notPrice) => {
                 // console.log(notPrice);
-                console.log(
-                    "Agregando una cripto que faltaba en BD: " +
-                        notPrice.symbol,
-                );
-                fetch(`${apiUrl}addmissingcripto`, {
-                    method: "POST",
-                    mode: "cors",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        cripto: `${notPrice.symbol}`,
-                    }),
-                })
-                    .then((res) => res.json())
-                    .catch((e) => console.log(e));
+                // console.log(
+                //     "Agregando una cripto que faltaba en BD: " +
+                //         notPrice.symbol,
+                // );
+                // Agregando la Cripto que faltaba en DB
+                // fetch(`${apiUrl}addmissingcripto`, {
+                //     method: "POST",
+                //     mode: "cors",
+                //     headers: {
+                //         "Content-Type": "application/json",
+                //     },
+                //     body: JSON.stringify({
+                //         cripto: `${notPrice.symbol}`,
+                //     }),
+                // })
+                //     .then((res) => res.json())
+                //     .catch((e) => console.log(e));
+                // Se agregan las criptos que faltaban al array
                 const holdFound = holdingsToSend.find(
-                    (hold) => hold.ticker == notPrice.symbol,
+                    (hold) => hold.ticker == notPrice.cripto,
                 );
                 if (holdFound) {
                     holdFound.actualPrice = notPrice.price;
