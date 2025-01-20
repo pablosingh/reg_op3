@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { loadHoldingsFromDB } from "../redux/holdings/actions";
+import { loadHoldingsFromDBwithActualPrice } from "../redux/holdings/actions";
 import BuySellComponent from "../components/BuySellComponent";
 import {
     secondaryColor,
@@ -54,7 +54,7 @@ export default function Create() {
             // body: JSON.stringify(toAdd),
             body: bodyToSend,
         }).then((js) => js.json());
-        dispatch(loadHoldingsFromDB(state.holdings.userId));
+        dispatch(loadHoldingsFromDBwithActualPrice(state.holdings.userId));
         console.log(response);
     };
     const sending = () => {

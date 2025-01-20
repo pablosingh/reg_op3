@@ -51,121 +51,6 @@ export function addPortfolioPercent(
     });
 }
 
-export function loadHoldingsFromDB(userId) {
-    return async function (dispatch) {
-        let holdingsToSend = [];
-        let temporalActualTotalPortfolio = 0.0;
-        let notPricePromises = [];
-        let dayPricePromises = [];
-        try {
-            // solicitamos todos los holdings a DB
-            holdingsToSend = await fetch(`${apiUrl}holdings/${userId}`).then(
-                (js) => js.json(),
-            );
-            // Consulta de precios actuales DIARIOS en DB
-            if (holdingsToSend.length) {
-                dayPricePromises = holdingsToSend.map((hold) =>
-                    fetch(`${apiUrl}dayprice/${hold.ticker}`).then((res) =>
-                        res.json(),
-                    ),
-                );
-            }
-            const dayPrices = await Promise.all(dayPricePromises);
-            // console.log("dayPrices");
-            // console.log(dayPrices);
-            // Mapeo de Holdings con Precios actuales
-            dayPrices.forEach((sub, i) => {
-                if (sub) {
-                    // Este if es de precios en DB
-                    // console.log(sub);
-                    holdingsToSend[i].actualPrice = sub.price;
-                    holdingsToSend[i].profits =
-                        holdingsToSend[i].actualPrice *
-                            holdingsToSend[i].amount -
-                        holdingsToSend[i].initialPrice *
-                            holdingsToSend[i].amount;
-                    holdingsToSend[i].profitsPercent =
-                        (holdingsToSend[i].profits * 100) /
-                        holdingsToSend[i].initialTotal;
-                } else {
-                    // Este else es de los que no estan DB, se piden a CMC
-                    // console.log("CMC => " + holdingsToSend[i].ticker);
-                    notPricePromises.push(
-                        fetch(
-                            `${apiUrl}daypricecmc/${holdingsToSend[i].ticker}`,
-                        ).then((res) => res.json()),
-                    );
-                }
-            });
-            const notPrices = await Promise.all(notPricePromises);
-            console.log("notPrices");
-            console.log(notPrices);
-            notPrices.forEach((notPrice) => {
-                // console.log(notPrice);
-                // console.log(
-                //     "Agregando una cripto que faltaba en BD: " +
-                //         notPrice.symbol,
-                // );
-                // Agregando la Cripto que faltaba en DB
-                // fetch(`${apiUrl}addmissingcripto`, {
-                //     method: "POST",
-                //     mode: "cors",
-                //     headers: {
-                //         "Content-Type": "application/json",
-                //     },
-                //     body: JSON.stringify({
-                //         cripto: `${notPrice.symbol}`,
-                //     }),
-                // })
-                //     .then((res) => res.json())
-                //     .catch((e) => console.log(e));
-                // Se agregan las criptos que faltaban al array
-                const holdFound = holdingsToSend.find(
-                    (hold) => hold.ticker == notPrice.cripto,
-                );
-                if (holdFound) {
-                    holdFound.actualPrice = notPrice.price;
-                    holdFound.profits =
-                        holdFound.amount * holdFound.actualPrice -
-                        holdFound.initialTotal;
-                    holdFound.profitsPercent =
-                        (holdFound.profits * 100) / holdFound.initialTotal;
-                }
-            });
-            dispatch({
-                type: LOAD_INITIAL_TOTAL_PORTFOLIO,
-                payload: calculateInitialTotalPortfolio(holdingsToSend),
-            });
-            temporalActualTotalPortfolio =
-                calculateActualTotalPortfolio(holdingsToSend);
-            dispatch({
-                type: LOAD_ACTUAL_TOTAL_PORTFOLIO,
-                payload: temporalActualTotalPortfolio,
-            });
-            holdingsToSend = [
-                ...addPortfolioPercent(
-                    holdingsToSend,
-                    temporalActualTotalPortfolio,
-                ),
-            ];
-            dispatch({
-                type: LOAD_TOTAL_PROFITS,
-                payload: calculateTotalProfits(holdingsToSend),
-            });
-            dispatch({
-                type: LOAD_TOTAL_PROFITS_PERCENT,
-                payload: null,
-            });
-            dispatch({
-                type: LOAD_HOLD_FROM_DB,
-                payload: holdingsToSend,
-            });
-        } catch (error) {
-            console.error(error);
-        }
-    };
-}
-
 export function loadHoldingsFromDBwithActualPrice(userId) {
     return async function (dispatch) {
         let holdingsToSend = [];
@@ -231,7 +116,6 @@ export function loadUserId({ email, name }) {
                     // console.log(usr);
                     return usr.id;
                 })
-                // .then((id) => dispatch(loadHoldingsFromDB(id)))
                 .then((id) => dispatch(loadHoldingsFromDBwithActualPrice(id)))
                 .catch((e) => console.error(e));
         } catch (error) {

@@ -8,7 +8,6 @@ import User from "./models/User.js";
 import Task from "./models/Task.js";
 
 import {
-    initialCriptoLoadingCMC,
     initialCriptoLoadingCMCtwo,
     programarEjecucionDiaria,
 } from "./controllers/criptos/initDBcmc.controllers.js";

@@ -8,22 +8,6 @@ import {
     getActualPriceDBfunction,
 } from "../criptos/getActualPrice.controllers.js";
 
-export const getHoldingsByUserId = async (req, res) => {
-    const { userId } = req.params;
-    console.log("Cargando Holdings");
-    try {
-        const foundHoldings = await Holding.findAll({
-            where: {
-                UserId: userId,
-            },
-            include: [Operation, User, Task],
-        });
-        res.json(foundHoldings);
-    } catch (error) {
-        res.json({ msg: error });
-    }
-};
-
 export const getAllHoldings = async (req, res) => {
     try {
         const foundHoldings = await Holding.findAll({

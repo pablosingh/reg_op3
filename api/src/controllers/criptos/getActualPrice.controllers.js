@@ -6,21 +6,6 @@ const headers = {
     "X-CMC_PRO_API_KEY": API_KEY_CMC,
 };
 
-export const getActualPriceFunc = async (ticker) => {
-    try {
-        let price = 0;
-        await fetch(
-            `https://www.binance.us/api/v3/ticker/price?symbol=${ticker.toUpperCase()}`,
-        )
-            .then((responseApi) => responseApi.json())
-            .then((responseApi) => (price = responseApi.price))
-            .catch((err) => (price = err));
-        return price;
-    } catch (error) {
-        return { message: error };
-    }
-};
-
 export const getActualPriceDB = async (req, res) => {
     const { cripto } = req.params;
     try {
