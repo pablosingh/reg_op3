@@ -27,7 +27,6 @@ sequelize
     .then(() => {
         const server = app.listen(port, async () => {
             console.log("Server on port ", port);
-            // initialCriptoLoadingCMC();
             initialCriptoLoadingCMCtwo();
             programarEjecucionDiaria();
         });

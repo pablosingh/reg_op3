@@ -13,7 +13,7 @@ export const getActualPriceDB = async (req, res) => {
             where: {
                 cripto: cripto.toUpperCase(),
             },
-            order: [["updatePrice", "DESC"]],
+            // order: [["updatePrice", "DESC"]], // Por que ahora la llave es unica
         });
         res.json(foundCripto);
     } catch (error) {

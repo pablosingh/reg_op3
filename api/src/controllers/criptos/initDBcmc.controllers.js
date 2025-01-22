@@ -17,7 +17,9 @@ export const initialCriptoLoadingCMCtwo = async () => {
         headers: headers,
     };
     try {
-        arrayCriptoDB = await Cripto.findAll();
+        arrayCriptoDB = await Cripto.findAll({
+            order: [["updatePrice", "ASC"]],
+        });
         if (arrayCriptoDB.length > 0) {
             const today = new Date();
             const priceDate = new Date(arrayCriptoDB[0].updatePrice);
@@ -78,7 +80,6 @@ export const initialCriptoLoadingCMCtwo = async () => {
 // ====================================
 
 export const ejecutarFuncionDiaria = () => {
-    // initialCriptoLoadingCMC();
     initialCriptoLoadingCMCtwo();
     programarEjecucionDiaria();
 };
