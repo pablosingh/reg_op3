@@ -7,11 +7,15 @@ import Hold from "./pages/Hold";
 import Navigation from "./components/Navigation";
 import { Provider } from "react-redux";
 import store from "./redux/store";
+import LoginButton from "./components/LoginButton";
+import { useAuth0 } from "@auth0/auth0-react";
 
 export default function App() {
+    const { isAuthenticated } = useAuth0();
     return (
         // <div className="App">
         <Provider store={store}>
+            {/* {isAuthenticated ? ( */}
             <BrowserRouter>
                 <Navigation />
                 <Routes>
@@ -28,6 +32,8 @@ export default function App() {
                     <Route path="/hold/:hold" element={<Hold />} />
                 </Routes>
             </BrowserRouter>
+            // ) : ( // <LoginButton />
+            // )}
         </Provider>
         // </div>
     );
