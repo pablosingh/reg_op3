@@ -13,28 +13,30 @@ import { useAuth0 } from "@auth0/auth0-react";
 export default function App() {
     const { isAuthenticated } = useAuth0();
     return (
-        // <div className="App">
         <Provider store={store}>
-            {/* {isAuthenticated ? ( */}
-            <BrowserRouter>
-                <Navigation />
-                <Routes>
-                    <Route
-                        path="/"
-                        element={
-                            <Navigate to="/holdings" element={<Holdings />} />
-                        }
-                    />
-                    <Route path="/holdings" element={<Holdings />} />
-                    <Route path="/create" element={<Create />} />
-                    <Route path="/user" element={<User />} />
-                    <Route path="/watch" element={<WatchList />} />
-                    <Route path="/hold/:hold" element={<Hold />} />
-                </Routes>
-            </BrowserRouter>
-            // ) : ( // <LoginButton />
-            // )}
+            {isAuthenticated ? (
+                <BrowserRouter>
+                    <Navigation />
+                    <Routes>
+                        <Route
+                            path="/"
+                            element={
+                                <Navigate
+                                    to="/holdings"
+                                    element={<Holdings />}
+                                />
+                            }
+                        />
+                        <Route path="/holdings" element={<Holdings />} />
+                        <Route path="/create" element={<Create />} />
+                        <Route path="/user" element={<User />} />
+                        <Route path="/watch" element={<WatchList />} />
+                        <Route path="/hold/:hold" element={<Hold />} />
+                    </Routes>
+                </BrowserRouter>
+            ) : (
+                <LoginButton />
+            )}
         </Provider>
-        // </div>
     );
 }

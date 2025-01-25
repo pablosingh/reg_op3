@@ -3,16 +3,14 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { loadUserId } from "../redux/holdings/actions";
 import { useDispatch } from "react-redux";
+import { useAuth0 } from "@auth0/auth0-react";
+import LogoutButton from "./LogoutButton";
 
 export default function Navigation() {
     const dispatch = useDispatch();
+    const { user } = useAuth0();
     useEffect(() => {
-        dispatch(
-            loadUserId({
-                email: "pablo.roberto.singh@gmail.com",
-                name: "Pablo Roberto Singh",
-            }),
-        );
+        dispatch(loadUserId(user));
     }, []);
     return (
         <ContainerStyled>
@@ -28,6 +26,7 @@ export default function Navigation() {
             <Link to="/watch" className="link">
                 Seguimiento
             </Link>
+            <LogoutButton />
         </ContainerStyled>
     );
 }
