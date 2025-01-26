@@ -1,3 +1,4 @@
+import temporalDBjson from "../../assets/temporalDB.json";
 export const LOAD_HOLD_FROM_DB = "LOAD_HOLD_FROM_DB";
 export const LOAD_USER_ID = "LOAD_USER_ID";
 export const LOAD_INITIAL_TOTAL_PORTFOLIO = "LOAD_INITIAL_TOTAL_PORTFOLIO";
@@ -51,47 +52,55 @@ export function addPortfolioPercent(
     });
 }
 
+export function setDefinitions(holdingsToSend, dispatch) {
+    let temporalActualTotalPortfolio = 0.0;
+    dispatch({
+        type: LOAD_INITIAL_TOTAL_PORTFOLIO,
+        payload: calculateInitialTotalPortfolio(holdingsToSend),
+    });
+    temporalActualTotalPortfolio =
+        calculateActualTotalPortfolio(holdingsToSend);
+    dispatch({
+        type: LOAD_ACTUAL_TOTAL_PORTFOLIO,
+        payload: temporalActualTotalPortfolio,
+    });
+    holdingsToSend = [
+        ...addPortfolioPercent(holdingsToSend, temporalActualTotalPortfolio),
+    ];
+    dispatch({
+        type: LOAD_TOTAL_PROFITS,
+        payload: calculateTotalProfits(holdingsToSend),
+    });
+    dispatch({
+        type: LOAD_TOTAL_PROFITS_PERCENT,
+        payload: null,
+    });
+    dispatch({
+        type: LOAD_HOLD_FROM_DB,
+        payload: holdingsToSend,
+    });
+}
+
 export function loadHoldingsFromDBwithActualPrice(userId) {
     return async function (dispatch) {
         let holdingsToSend = [];
-        let temporalActualTotalPortfolio = 0.0;
+        // let temporalActualTotalPortfolio = 0.0;
         try {
             // solicitamos todos los holdings a DB
             holdingsToSend = await fetch(
                 `${apiUrl}holdings/all/${userId}`,
             ).then((js) => js.json());
-
-            dispatch({
-                type: LOAD_INITIAL_TOTAL_PORTFOLIO,
-                payload: calculateInitialTotalPortfolio(holdingsToSend),
-            });
-            temporalActualTotalPortfolio =
-                calculateActualTotalPortfolio(holdingsToSend);
-            dispatch({
-                type: LOAD_ACTUAL_TOTAL_PORTFOLIO,
-                payload: temporalActualTotalPortfolio,
-            });
-            holdingsToSend = [
-                ...addPortfolioPercent(
-                    holdingsToSend,
-                    temporalActualTotalPortfolio,
-                ),
-            ];
-            dispatch({
-                type: LOAD_TOTAL_PROFITS,
-                payload: calculateTotalProfits(holdingsToSend),
-            });
-            dispatch({
-                type: LOAD_TOTAL_PROFITS_PERCENT,
-                payload: null,
-            });
-            dispatch({
-                type: LOAD_HOLD_FROM_DB,
-                payload: holdingsToSend,
-            });
+            setDefinitions(holdingsToSend, dispatch);
         } catch (error) {
             console.error(error);
         }
+    };
+}
+
+export function loadHoldingsNoBackend() {
+    console.log("Sin Backend...");
+    return async function (dispatch) {
+        setDefinitions(temporalDBjson, dispatch);
     };
 }
 
@@ -117,11 +126,12 @@ export function loadUserId({ email, name }) {
                     return usr.id;
                 })
                 .then((id) => dispatch(loadHoldingsFromDBwithActualPrice(id)))
-                .catch((e) => console.error(e));
+                .catch((e) => {
+                    dispatch(loadHoldingsNoBackend());
+                    console.error(e);
+                });
         } catch (error) {
             console.error(error);
         }
     };
 }
-
-export function initAllDispatch() {}
