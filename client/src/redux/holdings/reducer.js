@@ -12,6 +12,8 @@ import {
     ORDER_BY_DATE_ASC,
     ORDER_BY_DATE_DES,
     LOAD_ACTUAL_HOLDING,
+    ADD_PORTFOLIO_PERCENT,
+    addPortfolioPercent,
 } from "./actions";
 
 import { order } from "./orderFunctions";
@@ -60,14 +62,20 @@ export const holdings = (state = initialState, action) => {
                 totalProfitsPercent:
                     (state.totalProfits * 100) / state.initialTotalPortfolio,
             };
+        case ADD_PORTFOLIO_PERCENT:
+            return {
+                ...state,
+                holdings: addPortfolioPercent(
+                    state.holdings,
+                    state.actualTotalPortfolio,
+                ),
+            };
         case ORDER_BY_PROFITS_PERCENT_ASC:
-            // console.log(state.holdings);
             return {
                 ...state,
                 holdings: [...order(state.holdings, "profitsPercent", "asc")],
             };
         case ORDER_BY_PROFITS_PERCENT_DES:
-            // console.log(state.holdings);
             return {
                 ...state,
                 holdings: [...order(state.holdings, "profitsPercent", "des")],

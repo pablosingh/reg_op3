@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { updateActualPrice } from "../redux/holdings/actions";
 
 export default function CardHoldingTable(props) {
     const {
@@ -19,7 +21,9 @@ export default function CardHoldingTable(props) {
         Operations,
     } = props.ticker;
     // const state = useSelector((state) => state);
-    const [showOps, setShowOps] = useState(false);
+    const dispatch = useDispatch();
+    const [showManualPrice, setShowManualPrice] = useState(false);
+    const [manualPrice, setManualPrice] = useState(0.0);
     const dateTicker = new Date(date);
     const formattedDate = dateTicker.toLocaleDateString("es-ES", {
         day: "2-digit",
@@ -37,7 +41,7 @@ export default function CardHoldingTable(props) {
         maximumFractionDigits: 6,
     });
     return (
-        <TrContainer onClick={() => console.log("click")}>
+        <TrContainer>
             <td>{formattedDate}</td>
             <td className="negrita">
                 <Link to={`/hold/${ticker}`} className="link">
@@ -48,27 +52,52 @@ export default function CardHoldingTable(props) {
             <td>
                 <div>
                     ${" "}
-                    {initialPrice < 0.01
+                    {initialPrice < 0.09
                         ? smallFormatter.format(initialPrice)
                         : formatter.format(initialPrice)}
                 </div>
-                <div>
-                    ${" "}
-                    {actualPrice < 0.01
-                        ? smallFormatter.format(actualPrice)
-                        : formatter.format(actualPrice)}
-                </div>
+                {showManualPrice ? (
+                    <div>
+                        <InputData
+                            type="number"
+                            name="number"
+                            // value={}
+                            value={manualPrice}
+                            className=""
+                            onChange={(e) => setManualPrice(e.target.value)}
+                            autoFocus={true}
+                        />
+                        <button
+                            onClick={() => {
+                                console.log(manualPrice);
+                                setShowManualPrice(!showManualPrice);
+                                dispatch(
+                                    updateActualPrice(ticker, manualPrice),
+                                );
+                            }}
+                        >
+                            Guardar
+                        </button>
+                    </div>
+                ) : (
+                    <div onClick={() => setShowManualPrice(!showManualPrice)}>
+                        ${" "}
+                        {actualPrice < 0.09
+                            ? smallFormatter.format(actualPrice)
+                            : formatter.format(actualPrice)}
+                    </div>
+                )}
             </td>
             <td>
                 <div>
                     ${" "}
-                    {initialTotal < 0.01
+                    {initialTotal < 0.09
                         ? smallFormatter.format(initialTotal)
                         : formatter.format(initialTotal)}
                 </div>
                 <div>
                     ${" "}
-                    {amount * actualPrice < 0.01
+                    {amount * actualPrice < 0.09
                         ? smallFormatter.format(amount * actualPrice)
                         : formatter.format(amount * actualPrice)}
                 </div>
@@ -76,20 +105,20 @@ export default function CardHoldingTable(props) {
             <td>
                 <div className={`${profitsPercent > 0 ? "green" : "red"}`}>
                     %{" "}
-                    {profitsPercent < 0.01 && profitsPercent > -1
+                    {profitsPercent < 0.09 && profitsPercent > -1
                         ? smallFormatter.format(profitsPercent)
                         : formatter.format(profitsPercent)}
                 </div>
                 <div className={`${profits > 0 ? "green" : "red"}`}>
                     ${" "}
-                    {profits < 0.01 && profits > -1
+                    {profits < 0.09 && profits > -1
                         ? smallFormatter.format(profits)
                         : formatter.format(profits)}
                 </div>
             </td>
             <td className={`${portfolioPercent > 4 ? "highPercent" : " "}`}>
                 %{" "}
-                {portfolioPercent < 0.01
+                {portfolioPercent < 0.09
                     ? smallFormatter.format(portfolioPercent)
                     : formatter.format(portfolioPercent)}
             </td>
@@ -122,4 +151,9 @@ const TrContainer = styled.tr`
         font-weight: bold;
         background-color: blue;
     }
+`;
+
+const InputData = styled.input`
+    max-width: 7vw;
+    margin: 0.2em 0em 0em 0.7em;
 `;

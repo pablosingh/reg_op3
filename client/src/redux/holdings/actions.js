@@ -12,6 +12,7 @@ export const ORDER_BY_PORTFOLIO_PERCENT_DES = "ORDER_BY_PORTFOLIO_PERCENT_DES";
 export const ORDER_BY_DATE_ASC = "ORDER_BY_DATE_ASC";
 export const ORDER_BY_DATE_DES = "ORDER_BY_DATE_DES";
 export const LOAD_ACTUAL_HOLDING = "LOAD_ACTUAL_HOLDING";
+export const ADD_PORTFOLIO_PERCENT = "ADD_PORTFOLIO_PERCENT";
 
 // function actualPrice
 // apiURL = `https://www.binance.us/api/v3/ticker/price?symbol=btcusdt`;
@@ -45,28 +46,33 @@ export function addPortfolioPercent(
     arrayHoldings,
     temporalActualTotalPortfolio,
 ) {
+    // console.log(temporalActualTotalPortfolio);
     return arrayHoldings.map((e) => {
-        e.portfolioPercent =
+        let portfolioPercent =
             (e.amount * e.actualPrice * 100) / temporalActualTotalPortfolio;
-        return e;
+        return { ...e, portfolioPercent };
     });
 }
 
 export function setDefinitions(holdingsToSend, dispatch) {
-    let temporalActualTotalPortfolio = 0.0;
+    let temporalActualTotalPortfolio =
+        calculateActualTotalPortfolio(holdingsToSend);
+    holdingsToSend = addPortfolioPercent(
+        holdingsToSend,
+        temporalActualTotalPortfolio,
+    );
     dispatch({
         type: LOAD_INITIAL_TOTAL_PORTFOLIO,
         payload: calculateInitialTotalPortfolio(holdingsToSend),
     });
-    temporalActualTotalPortfolio =
-        calculateActualTotalPortfolio(holdingsToSend);
     dispatch({
         type: LOAD_ACTUAL_TOTAL_PORTFOLIO,
         payload: temporalActualTotalPortfolio,
     });
-    holdingsToSend = [
-        ...addPortfolioPercent(holdingsToSend, temporalActualTotalPortfolio),
-    ];
+    // dispatch({
+    //     type: ADD_PORTFOLIO_PERCENT,
+    //     payload: temporalActualTotalPortfolio,
+    // });
     dispatch({
         type: LOAD_TOTAL_PROFITS,
         payload: calculateTotalProfits(holdingsToSend),
@@ -133,5 +139,18 @@ export function loadUserId({ email, name }) {
         } catch (error) {
             console.error(error);
         }
+    };
+}
+
+export function updateActualPrice(ticker, newPrice) {
+    return function (dispatch, getState) {
+        const state = getState();
+        // console.log(state);
+        const newHoldings = state.holdings.holdings.map((e) => {
+            if (e.ticker == ticker) return { ...e, actualPrice: newPrice };
+            else return { ...e };
+        });
+        // console.log(newHoldings);
+        setDefinitions(newHoldings, dispatch);
     };
 }
