@@ -145,12 +145,19 @@ export function loadUserId({ email, name }) {
 export function updateActualPrice(ticker, newPrice) {
     return function (dispatch, getState) {
         const state = getState();
-        // console.log(state);
         const newHoldings = state.holdings.holdings.map((e) => {
-            if (e.ticker == ticker) return { ...e, actualPrice: newPrice };
-            else return { ...e };
+            if (e.ticker == ticker) {
+                const newPriceFloat = parseFloat(newPrice);
+                return {
+                    ...e,
+                    actualPrice: newPriceFloat,
+                    profits: newPriceFloat * e.amount - e.initialTotal,
+                    profitsPercent:
+                        ((newPriceFloat * e.amount - e.initialTotal) * 100) /
+                        e.initialTotal,
+                };
+            } else return { ...e };
         });
-        // console.log(newHoldings);
         setDefinitions(newHoldings, dispatch);
     };
 }

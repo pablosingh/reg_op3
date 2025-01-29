@@ -1,5 +1,11 @@
 import React from "react";
+import HeadTableWatchList from "../components/HeadTableWatchList";
 
 export default function WatchList() {
-    return <div>WatchList</div>;
+    return (
+        <div>
+            <button>Actualizar</button>
+            <HeadTableWatchList />
+        </div>
+    );
 }

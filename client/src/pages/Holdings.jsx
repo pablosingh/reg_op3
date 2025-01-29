@@ -13,10 +13,10 @@ export default function Holdings() {
     const [showTable, setShowTable] = useState(true);
     return (
         <ContainerStyled>
-            <button onClick={() => console.log(arrayHoldings)}>Holds</button>
-            <button onClick={() => console.log(state)}>Estado</button>
+            {/* <button onClick={() => console.log(arrayHoldings)}>Holds</button>
+            <button onClick={() => console.log(state)}>Estado</button> */}
             <CardFiltersButtons />
-            <Btn onClick={() => setShowTable(!showTable)}>Mostrar Tabla</Btn>
+            {/* <Btn onClick={() => setShowTable(!showTable)}>Mostrar Tabla</Btn> */}
             {showTable ? (
                 <HeadTableHolding />
             ) : (

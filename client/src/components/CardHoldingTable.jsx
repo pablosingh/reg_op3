@@ -3,6 +3,9 @@ import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { updateActualPrice } from "../redux/holdings/actions";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
+import { secondaryColor } from "../styles/colors";
 
 export default function CardHoldingTable(props) {
     const {
@@ -23,7 +26,7 @@ export default function CardHoldingTable(props) {
     // const state = useSelector((state) => state);
     const dispatch = useDispatch();
     const [showManualPrice, setShowManualPrice] = useState(false);
-    const [manualPrice, setManualPrice] = useState(0.0);
+    const [manualPrice, setManualPrice] = useState(actualPrice);
     const dateTicker = new Date(date);
     const formattedDate = dateTicker.toLocaleDateString("es-ES", {
         day: "2-digit",
@@ -48,7 +51,7 @@ export default function CardHoldingTable(props) {
                     {ticker}
                 </Link>
             </td>
-            <td>{amount}</td>
+            <td>{formatter.format(amount)}</td>
             <td>
                 <div>
                     ${" "}
@@ -57,7 +60,7 @@ export default function CardHoldingTable(props) {
                         : formatter.format(initialPrice)}
                 </div>
                 {showManualPrice ? (
-                    <div>
+                    <div className="d-flex">
                         <InputData
                             type="number"
                             name="number"
@@ -67,24 +70,29 @@ export default function CardHoldingTable(props) {
                             onChange={(e) => setManualPrice(e.target.value)}
                             autoFocus={true}
                         />
-                        <button
+                        <Btn
                             onClick={() => {
-                                console.log(manualPrice);
+                                // console.log(manualPrice);
                                 setShowManualPrice(!showManualPrice);
                                 dispatch(
                                     updateActualPrice(ticker, manualPrice),
                                 );
                             }}
                         >
-                            Guardar
-                        </button>
+                            <SaveOutlinedIcon className="symbolBtn" />
+                        </Btn>
                     </div>
                 ) : (
-                    <div onClick={() => setShowManualPrice(!showManualPrice)}>
+                    <div className="d-flex">
                         ${" "}
                         {actualPrice < 0.09
                             ? smallFormatter.format(actualPrice)
                             : formatter.format(actualPrice)}
+                        <Btn
+                            onClick={() => setShowManualPrice(!showManualPrice)}
+                        >
+                            <EditOutlinedIcon className="symbolBtn" />
+                        </Btn>
                     </div>
                 )}
             </td>
@@ -151,9 +159,28 @@ const TrContainer = styled.tr`
         font-weight: bold;
         background-color: blue;
     }
+    .d-flex {
+        display: flex;
+        justify-content: center;
+    }
 `;
 
 const InputData = styled.input`
     max-width: 7vw;
     margin: 0.2em 0em 0em 0.7em;
+`;
+
+const Btn = styled.div`
+    color: black;
+    // display: flex;
+    // flex-direction: column;
+    // align-items: center;
+    background-color: ${secondaryColor};
+    // border: 2px solid #333;
+    margin: 0.1em 0.2em;
+    padding: 0.01em 0.1em;
+    border-radius: 0.5em;
+    .symbolBtn {
+        font-size: 15px;
+    }
 `;
