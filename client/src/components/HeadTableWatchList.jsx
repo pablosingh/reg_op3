@@ -1,14 +1,17 @@
 import React from "react";
-// import { useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
 // import CardHoldingTable from "./CardHoldingTable";
 import { ItemHoldingColor, secondaryColor } from "../styles/colors";
+import CardWatchList from "./CardWatchList";
 
 export default function HeadTableWatchList() {
+    const watchs = useSelector((state) => state?.watchlist?.watchlist);
     return (
         <TableContainer>
             <thead>
                 <tr>
+                    <th>Fecha</th>
                     <th>Ticker</th>
                     <th>Precio</th>
                     <th>% 1 hs</th>
@@ -23,10 +26,10 @@ export default function HeadTableWatchList() {
                 </tr>
             </thead>
             <tbody>
-                {/* {arrayHoldings &&
-                    arrayHoldings?.map((hold) => (
-                        <CardHoldingTable ticker={hold} key={hold.id} />
-                    ))} */}
+                {watchs &&
+                    watchs?.map((watch, i) => (
+                        <CardWatchList watch={watch} key={i} />
+                    ))}
             </tbody>
         </TableContainer>
     );
