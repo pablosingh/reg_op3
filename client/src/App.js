@@ -5,6 +5,7 @@ import User from "./pages/User";
 import WatchList from "./pages/WatchList";
 import Hold from "./pages/Hold";
 import Navigation from "./components/Navigation";
+import MobileMenu from "./components/MobileMenu";
 import { Provider } from "react-redux";
 import store from "./redux/store";
 import LoginButton from "./components/LoginButton";
@@ -17,6 +18,7 @@ export default function App() {
             {isAuthenticated ? (
                 <BrowserRouter>
                     <Navigation />
+                    <MobileMenu />
                     <Routes>
                         <Route
                             path="/"

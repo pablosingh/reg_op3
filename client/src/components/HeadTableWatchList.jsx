@@ -36,7 +36,9 @@ export default function HeadTableWatchList() {
 }
 
 const TableContainer = styled.table`
-    // width: 100%;
+    max-width: 100vw;
+    overflow-x: auto;
+    // flex-wrap: wrap;
     font-size: 1em;
     text-align: center;
     border-collapse: collapse;

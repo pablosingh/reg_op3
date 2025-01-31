@@ -32,6 +32,9 @@ export default function Navigation() {
 }
 
 const ContainerStyled = styled.div`
+    @media (max-width: 768px) {
+        display: none;
+    }
     margin: 0em 0em;
     padding: 0em 0em;
     display: flex;
@@ -39,6 +42,7 @@ const ContainerStyled = styled.div`
     align-items: center;
     background-color: rgba(25, 125, 175, 255);
     height: 15vh;
+    min-width: 100vw;
     .link {
         color: black;
         font-weight: bold;

@@ -58,6 +58,8 @@ export default function CardWatchList(props) {
 }
 
 const TrContainer = styled.tr`
+    max-width: 100%;
+    flex-wrap: wrap;
     .red {
         color: red;
         font-weight: bold;

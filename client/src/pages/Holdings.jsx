@@ -31,8 +31,8 @@ export default function Holdings() {
 }
 
 const ContainerStyled = styled.div`
-    width: 100vw;
-    height: 100vh;
+    min-width: 100vw;
+    min-height: 100vh;
     margin: 0em 0em;
     padding: 0em 0em;
     // background-color: red;
