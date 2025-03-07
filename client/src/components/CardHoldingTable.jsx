@@ -124,7 +124,9 @@ export default function CardHoldingTable(props) {
                         : formatter.format(profits)}
                 </div>
             </td>
-            <td className={`${portfolioPercent > 4 ? "highPercent" : " "}`}>
+            <td
+                className={`${portfolioPercent > 4 ? "highPercent" : portfolioPercent < 1.2 ? "lowPercent" : ""}`}
+            >
                 %{" "}
                 {portfolioPercent < 0.09
                     ? smallFormatter.format(portfolioPercent)
@@ -158,6 +160,11 @@ const TrContainer = styled.tr`
         color: white;
         font-weight: bold;
         background-color: blue;
+    }
+    .lowPercent {
+        color: black;
+        font-weight: bold;
+        background-color: aqua;
     }
     .d-flex {
         display: flex;
