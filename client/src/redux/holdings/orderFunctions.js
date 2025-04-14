@@ -44,6 +44,20 @@ export function order(arreglo, type, direction) {
                     else return 0;
                 });
             break;
+        case "initialTotal":
+            if (direction === "asc")
+                arrayToSend = arrayAux.sort(function (a, b) {
+                    if (a.initialTotal > b.initialTotal) return 1;
+                    else if (a.initialTotal < b.initialTotal) return -1;
+                    else return 0;
+                });
+            else
+                arrayToSend = arrayAux.sort(function (b, a) {
+                    if (a.initialTotal > b.initialTotal) return 1;
+                    else if (a.initialTotal < b.initialTotal) return -1;
+                    else return 0;
+                });
+            break;
         default:
             console.log("Error al ordernar...");
             arrayToSend = [...arreglo];

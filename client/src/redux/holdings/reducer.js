@@ -11,6 +11,8 @@ import {
     ORDER_BY_PORTFOLIO_PERCENT_DES,
     ORDER_BY_DATE_ASC,
     ORDER_BY_DATE_DES,
+    ORDER_BY_INITIAL_TOTAL_ASC,
+    ORDER_BY_INITIAL_TOTAL_DES,
     LOAD_ACTUAL_HOLDING,
     ADD_PORTFOLIO_PERCENT,
     addPortfolioPercent,
@@ -99,6 +101,16 @@ export const holdings = (state = initialState, action) => {
             return {
                 ...state,
                 holdings: [...order(state.holdings, "date", "des")],
+            };
+        case ORDER_BY_INITIAL_TOTAL_ASC:
+            return {
+                ...state,
+                holdings: [...order(state.holdings, "initialTotal", "asc")],
+            };
+        case ORDER_BY_INITIAL_TOTAL_DES:
+            return {
+                ...state,
+                holdings: [...order(state.holdings, "initialTotal", "des")],
             };
         case LOAD_ACTUAL_HOLDING:
             // console.log(action.payload);

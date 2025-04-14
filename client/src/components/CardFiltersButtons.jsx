@@ -10,6 +10,8 @@ import {
     ORDER_BY_PORTFOLIO_PERCENT_DES,
     ORDER_BY_DATE_ASC,
     ORDER_BY_DATE_DES,
+    ORDER_BY_INITIAL_TOTAL_ASC,
+    ORDER_BY_INITIAL_TOTAL_DES,
 } from "../redux/holdings/actions.js";
 import {
     ItemHoldingColor,
@@ -24,6 +26,7 @@ export default function CardFiltersButtons() {
         <ContainerStyled>
             <Item>
                 {/* Ordenar Por : */}
+                {/* <SubItem> */}
                 <SubItem>
                     <Btn
                         onClick={() =>
@@ -53,6 +56,8 @@ export default function CardFiltersButtons() {
                             <ArrowDownwardIcon className="symbolBtn" />
                         </BtnInside>
                     </Btn>
+                </SubItem>
+                <SubItem>
                     <Btn
                         onClick={() =>
                             dispatch({
@@ -81,7 +86,8 @@ export default function CardFiltersButtons() {
                             <ArrowDownwardIcon className="symbolBtn" />
                         </BtnInside>
                     </Btn>
-
+                </SubItem>
+                <SubItem>
                     <Btn
                         onClick={() =>
                             dispatch({
@@ -111,6 +117,37 @@ export default function CardFiltersButtons() {
                         </BtnInside>
                     </Btn>
                 </SubItem>
+                <SubItem>
+                    <Btn
+                        onClick={() =>
+                            dispatch({
+                                type: ORDER_BY_INITIAL_TOTAL_ASC,
+                                payload: null,
+                            })
+                        }
+                    >
+                        <BtnInside>
+                            <label>Total</label>
+                            <label>Inicial</label>
+                            <ArrowUpwardIcon className="symbolBtn" />
+                        </BtnInside>
+                    </Btn>
+                    <Btn
+                        onClick={() =>
+                            dispatch({
+                                type: ORDER_BY_INITIAL_TOTAL_DES,
+                                payload: null,
+                            })
+                        }
+                    >
+                        <BtnInside>
+                            <label>Total</label>
+                            <label>Inicial</label>
+                            <ArrowDownwardIcon className="symbolBtn" />
+                        </BtnInside>
+                    </Btn>
+                </SubItem>
+                {/* </SubItem> */}
             </Item>
         </ContainerStyled>
     );
@@ -131,7 +168,7 @@ const ContainerStyled = styled.div`
 const Item = styled.div`
     color: black;
     display: flex;
-    flex-direction: column;
+    // flex-direction: column;
     flex-wrap: wrap;
     background-color: ${ItemHoldingColor};
     margin: 0.1em;
@@ -153,7 +190,7 @@ const SubItem = styled.div`
     color: black;
     display: flex;
     // flex-direction: column;
-    // background-color: ${secondaryColor};
+    background-color: ${secondaryColor};
     // border: 2px solid #333;
     margin: 0.1em;
     padding: 0.3em;
