@@ -4,6 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import CardTicker from "../components/CardTicker";
 import CardHolding from "../components/CardHolding";
 import { LOAD_ACTUAL_HOLDING } from "../redux/holdings/actions";
+import DcaValues from "../components/DcaValues";
 
 export default function Hold() {
     const params = useParams();
@@ -23,6 +24,7 @@ export default function Hold() {
             {/* <button onClick={() => console.log(actualHold)}>estado</button> */}
             <CardHolding ticker={actualHold} />
             {/* <CardTicker /> */}
+            <DcaValues ticker={actualHold} />
         </div>
     );
 }
