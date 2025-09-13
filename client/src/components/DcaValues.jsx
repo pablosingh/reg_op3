@@ -63,7 +63,7 @@ const DcaValues = (props) => {
     };
     useEffect(() => {
         const auxArrayAverage = [];
-        for (let i = 1; i <= 10; i++) {
+        for (let i = 1; i <= 100; i++) {
             auxArrayAverage.push(calculateAverage(initialTotal * i));
         }
         setArrayAverage([...auxArrayAverage]);
@@ -82,6 +82,7 @@ const DcaValues = (props) => {
             <TableContainer>
                 <thead>
                     <tr>
+                        <th>X</th>
                         <th>Total Agregado</th>
                         <th>Unidades</th>
                         <th>Precio Actual</th>
@@ -93,6 +94,7 @@ const DcaValues = (props) => {
                 </thead>
                 <tbody>
                     <tr>
+                        <td>Manual</td>
                         <td>{average.addTotal.toFixed(2)}</td>
                         <td>{average.amount.toFixed(2)}</td>
                         <td>{average.actualPrice.toFixed(2)}</td>
@@ -102,9 +104,10 @@ const DcaValues = (props) => {
                         <td>{average.dcaPercent.toFixed(2)} %</td>
                     </tr>
                     {arrayAverage &&
-                        arrayAverage.map((item) => {
+                        arrayAverage.map((item, i) => {
                             return (
                                 <tr>
+                                    <td>x{i + 2}</td>
                                     <td>{item.addTotal?.toFixed(2)}</td>
                                     <td>{item.amount?.toFixed(2)}</td>
                                     <td>{item.actualPrice?.toFixed(2)}</td>

@@ -3,7 +3,7 @@ import { getActualPriceCMCfunction } from "./getActualPrice.controllers.js";
 
 // ====================================================
 export const initialCriptoLoadingCMCtwo = async () => {
-    console.log("Carga inicial de DB desde API CoinMarketCap 2");
+    // console.log("Carga inicial de DB desde API CoinMarketCap 2");
     let arrayCripto = [];
     let arrayCriptoDB = [];
     let daysPassed = 0;
@@ -24,10 +24,15 @@ export const initialCriptoLoadingCMCtwo = async () => {
             const today = new Date();
             const priceDate = new Date(arrayCriptoDB[0].updatePrice);
             const differenceDayMs = today - priceDate;
-            daysPassed = Math.floor(differenceDayMs / (1000 * 60 * 60 * 24));
-            console.log(daysPassed);
+            console.log("Diferencia: " + differenceDayMs + " ms");
+            console.log(
+                "Dias pasados : " + differenceDayMs / (1000 * 60 * 60 * 12),
+            );
+            daysPassed = Math.floor(differenceDayMs / (1000 * 60 * 60 * 12));
+            console.log("Dias pasados : " + daysPassed + " Redondeados");
         }
         if (daysPassed >= 1) {
+            console.log("Fetch a la API CMC");
             const arrayToCreateCMC = await fetch(url, options)
                 .then((js) => js.json())
                 .then((arrayRes) => {
